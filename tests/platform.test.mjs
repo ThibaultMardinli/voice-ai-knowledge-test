@@ -25,6 +25,26 @@ test("keeps assessment creation behind authentication", async () => {
   );
 });
 
+test("keeps the question bank behind the administrator allowlist", async () => {
+  const [page, route] = await Promise.all([
+    readFile(
+      new URL("../app/admin/questions/page.tsx", import.meta.url),
+      "utf8",
+    ),
+    readFile(
+      new URL(
+        "../app/api/admin/question-bank/import/route.ts",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ]);
+  assert.match(page, /requireCandidate\(\"\/admin\/questions\"\)/);
+  assert.match(page, /isAdmin\(candidate\.email\)/);
+  assert.match(route, /adminAuthorized/);
+  assert.match(route, /Not found/);
+});
+
 test("publishes the non-accreditation disclosure with criteria", async () => {
   const criteria = await readFile(
     new URL("../app/criteria/[slug]/page.tsx", import.meta.url),

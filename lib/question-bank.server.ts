@@ -19,6 +19,13 @@ export type QuestionImport = {
   sourceNotes: string;
 };
 
+export type AdminQuestion = QuestionImport & {
+  id: number;
+  examVersion: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export async function importQuestionBank(input: {
   version: string;
   questions: QuestionImport[];
@@ -137,6 +144,57 @@ export async function questionBankStatus() {
       count: number;
     }>();
   return { version: EXAM_VERSION, counts: rows.results };
+}
+
+export async function listQuestionBank() {
+  const rows = await getRawDb()
+    .prepare(
+      `SELECT id, question_key, exam_version, level, domain, prompt,
+              options_json, correct_option, rationale, status, authored_by,
+              reviewed_by, reviewed_at, source_notes, created_at, updated_at
+       FROM question_bank
+       WHERE exam_version = ?
+       ORDER BY level, domain, status DESC, question_key
+       LIMIT 500`,
+    )
+    .bind(EXAM_VERSION)
+    .all<{
+      id: number;
+      question_key: string;
+      exam_version: string;
+      level: number;
+      domain: number;
+      prompt: string;
+      options_json: string;
+      correct_option: number;
+      rationale: string;
+      status: "draft" | "approved";
+      authored_by: string;
+      reviewed_by: string | null;
+      reviewed_at: string | null;
+      source_notes: string;
+      created_at: string;
+      updated_at: string;
+    }>();
+
+  return rows.results.map((row) => ({
+    id: row.id,
+    key: row.question_key,
+    examVersion: row.exam_version,
+    level: row.level,
+    domain: row.domain,
+    prompt: row.prompt,
+    options: JSON.parse(row.options_json) as string[],
+    correctOption: row.correct_option,
+    rationale: row.rationale,
+    status: row.status,
+    authoredBy: row.authored_by,
+    reviewedBy: row.reviewed_by ?? undefined,
+    reviewedAt: row.reviewed_at ?? undefined,
+    sourceNotes: row.source_notes,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  })) satisfies AdminQuestion[];
 }
 
 function validateQuestion(question: QuestionImport) {
