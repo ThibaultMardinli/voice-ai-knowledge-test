@@ -62,18 +62,18 @@ export default async function HomePage() {
             building, and operating the Voice AI ecosystem.
           </p>
           <div className="hero-actions">
-            <Link className="button signal" href={assessmentHref}>
+            <Link className="button signal" href="/learn">
+              Learn
+            </Link>
+            <Link className="button secondary" href={assessmentHref}>
               {isPractice
-                ? "Start the quiz"
+                ? "Take the quiz"
                 : isOpen
                   ? candidate
                     ? "Start assessment"
                     : "Sign in to certify"
                   : "Review the release standard"}{" "}
               →
-            </Link>
-            <Link className="button secondary" href="/verify">
-              Verify a credential
             </Link>
           </div>
         </div>
@@ -125,8 +125,10 @@ export default async function HomePage() {
                 width="132"
                 height="132"
               />
-              <h3>{level.title}</h3>
-              <p>{level.description}</p>
+              <div className="credential-copy">
+                <h3>{level.title}</h3>
+                <p>{level.description}</p>
+              </div>
               <div className="card-footer">
                 <span>{level.credentialType}</span>
                 <Link href={`/criteria/${level.slug}`}>Criteria →</Link>

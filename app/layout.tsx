@@ -69,6 +69,7 @@ export default async function RootLayout({
               <strong>CERTIFICATION</strong>
             </Link>
             <nav aria-label="Primary navigation">
+              <Link href="/learn">Learn</Link>
               <Link href="/#credentials">Credentials</Link>
               <Link href="/#standard">Standard</Link>
               <Link href="/methodology">Methodology</Link>

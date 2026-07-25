@@ -11,6 +11,23 @@ test("defines the public credential standard", async () => {
   assert.match(page, /No vanity badges/i);
 });
 
+test("restores the public learning library without assessment answers", async () => {
+  const [page, library, glossary, home] = await Promise.all([
+    readFile(new URL("../app/learn/page.tsx", import.meta.url), "utf8"),
+    readFile(
+      new URL("../components/KnowledgeLibrary.tsx", import.meta.url),
+      "utf8",
+    ),
+    readFile(new URL("../lib/glossary.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.match(page, /Learn the system, not just the vocabulary/);
+  assert.match(library, /Search the library/);
+  assert.match(glossary, /Automatic Speech Recognition/);
+  assert.doesNotMatch(glossary, /correct_option|correct:\s*\d|options:/);
+  assert.ok(home.indexOf('href="/learn"') < home.indexOf("href={assessmentHref}"));
+});
+
 test("supports anonymous beta attempts with private browser identity", async () => {
   const [route, identity, exam] = await Promise.all([
     readFile(new URL("../app/api/exam/start/route.ts", import.meta.url), "utf8"),

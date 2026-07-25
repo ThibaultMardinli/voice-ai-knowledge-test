@@ -771,6 +771,11 @@ select:focus-visible {
   flex-direction: column;
 }
 
+.credential-copy {
+  display: grid;
+  grid-template-rows: minmax(66px, auto) minmax(92px, auto);
+}
+
 .credential-card:last-child {
   border-right: 0;
 }
@@ -791,16 +796,18 @@ select:focus-visible {
 }
 
 .credential-card h3 {
-  margin: 0 0 10px;
+  margin: 0;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 26px;
   letter-spacing: -0.035em;
+  line-height: 1.12;
 }
 
 .credential-card p {
   color: var(--muted);
   font-size: 13px;
   line-height: 1.6;
+  margin: 0;
 }
 
 .credential-card .card-footer {
@@ -812,6 +819,190 @@ select:focus-visible {
   gap: 10px;
   font-size: 11px;
   font-weight: 800;
+}
+
+.learn-page {
+  padding-top: 0;
+}
+
+.learn-hero {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-top: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+}
+
+.learn-hero > div {
+  min-height: 390px;
+  padding: clamp(36px, 6vw, 72px);
+}
+
+.learn-hero > div:first-child {
+  border-right: 2px solid var(--ink);
+}
+
+.learn-hero h1 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(48px, 6.6vw, 88px);
+  letter-spacing: -0.06em;
+  line-height: 0.94;
+  margin: 18px 0 0;
+  max-width: 760px;
+}
+
+.learn-intro {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.learn-intro p {
+  color: var(--muted);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+  line-height: 1.5;
+  margin: 0 0 28px;
+}
+
+.knowledge-controls {
+  background: var(--white);
+  border: 2px solid var(--ink);
+  border-top: 0;
+}
+
+.knowledge-search {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+}
+
+.knowledge-search span {
+  align-items: center;
+  border-right: 2px solid var(--ink);
+  display: flex;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  padding: 20px;
+  text-transform: uppercase;
+}
+
+.knowledge-search input {
+  background: var(--paper);
+  border: 0;
+  font: 16px/1.4 "SFMono-Regular", "Cascadia Code", monospace;
+  min-height: 66px;
+  padding: 18px 22px;
+  width: 100%;
+}
+
+.knowledge-filters {
+  border-top: 2px solid var(--ink);
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.knowledge-filters button {
+  background: var(--paper);
+  border: 0;
+  cursor: pointer;
+  font: 800 10px/1.25 "SFMono-Regular", "Cascadia Code", monospace;
+  letter-spacing: 0.05em;
+  min-height: 58px;
+  padding: 12px 8px;
+  text-transform: uppercase;
+}
+
+.knowledge-filters button + button {
+  border-left: 1px solid var(--line);
+}
+
+.knowledge-filters button:hover,
+.knowledge-filters button.active {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.knowledge-count {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 28px 2px 16px;
+}
+
+.knowledge-count strong {
+  font-size: 13px;
+}
+
+.knowledge-grid {
+  border: 2px solid var(--ink);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.knowledge-card {
+  background: var(--paper);
+  min-height: 290px;
+  padding: 26px;
+}
+
+.knowledge-card:nth-child(3n + 2),
+.knowledge-card:nth-child(3n + 3) {
+  border-left: 1px solid var(--line);
+}
+
+.knowledge-card:nth-child(n + 4) {
+  border-top: 1px solid var(--line);
+}
+
+.knowledge-card-meta {
+  color: var(--muted);
+  display: flex;
+  font-size: 9px;
+  font-weight: 900;
+  justify-content: space-between;
+  letter-spacing: 0.09em;
+  min-height: 14px;
+  text-transform: uppercase;
+}
+
+.knowledge-card h2 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 30px;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 38px 0 8px;
+}
+
+.knowledge-card h3 {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+  margin: 0 0 18px;
+  text-transform: uppercase;
+}
+
+.knowledge-card p {
+  color: #475569;
+  font-size: 12px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.knowledge-empty {
+  border: 2px solid var(--ink);
+  padding: 64px;
+  text-align: center;
+}
+
+.knowledge-empty h2 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 40px;
+}
+
+.knowledge-empty .button {
+  margin-top: 20px;
 }
 
 .standard-grid {
@@ -1353,7 +1544,8 @@ select:focus-visible {
 @media (max-width: 900px) {
   .hero,
   .standard-grid,
-  .verification-grid {
+  .verification-grid,
+  .learn-hero {
     grid-template-columns: 1fr;
   }
 
@@ -1379,6 +1571,48 @@ select:focus-visible {
 
   .credential-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .learn-hero > div {
+    min-height: 0;
+  }
+
+  .learn-hero > div:first-child {
+    border-bottom: 2px solid var(--ink);
+    border-right: 0;
+  }
+
+  .knowledge-filters {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .knowledge-filters button:nth-child(5) {
+    border-left: 0;
+  }
+
+  .knowledge-filters button:nth-child(n + 5) {
+    border-top: 1px solid var(--line);
+  }
+
+  .knowledge-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .knowledge-card:nth-child(3n + 2),
+  .knowledge-card:nth-child(3n + 3) {
+    border-left: 0;
+  }
+
+  .knowledge-card:nth-child(n + 4) {
+    border-top: 0;
+  }
+
+  .knowledge-card:nth-child(2n) {
+    border-left: 1px solid var(--line);
+  }
+
+  .knowledge-card:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
   }
 
   .credential-card:nth-child(2) {
@@ -1447,6 +1681,39 @@ select:focus-visible {
 
   .credential-card {
     min-height: 400px;
+  }
+
+  .credential-copy {
+    grid-template-rows: auto auto;
+  }
+
+  .knowledge-search {
+    grid-template-columns: 1fr;
+  }
+
+  .knowledge-search span {
+    border-bottom: 1px solid var(--line);
+    border-right: 0;
+  }
+
+  .knowledge-filters,
+  .knowledge-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .knowledge-filters button + button,
+  .knowledge-filters button:nth-child(5),
+  .knowledge-card:nth-child(2n) {
+    border-left: 0;
+  }
+
+  .knowledge-filters button:nth-child(n + 2),
+  .knowledge-card:nth-child(n + 2) {
+    border-top: 1px solid var(--line);
+  }
+
+  .knowledge-card {
+    min-height: 0;
   }
 
   .exam-top {
