@@ -140,3 +140,15 @@ test("packages hosting metadata, migration, and all badge images", async () => {
     assert.ok(file.length > 1000);
   }
 });
+
+test("applies security headers to every hosted response", async () => {
+  const worker = await readFile(
+    new URL("../worker/index.ts", import.meta.url),
+    "utf8",
+  );
+  assert.match(worker, /strict-transport-security/);
+  assert.match(worker, /frame-ancestors 'none'/);
+  assert.match(worker, /x-frame-options/);
+  assert.match(worker, /permissions-policy/);
+  assert.match(worker, /x-content-type-options/);
+});

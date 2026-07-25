@@ -8,7 +8,7 @@ export function newId() {
 }
 
 export function newCredentialId(levelSlug: string) {
-  const token = randomBytes(9).toString("base64url").toUpperCase();
+  const token = randomBytes(16).toString("base64url").toUpperCase();
   return `VAS-2026-${levelSlug.toUpperCase()}-${token}`;
 }
 

@@ -30,7 +30,7 @@ const worker = {
     const url = new URL(request.url);
     if (url.pathname === "/_vinext/image") {
       const allowedWidths = [...DEFAULT_DEVICE_SIZES, ...DEFAULT_IMAGE_SIZES];
-      return handleImageOptimization(
+      const response = await handleImageOptimization(
         request,
         {
           fetchAsset: (path) =>
@@ -44,9 +44,32 @@ const worker = {
         },
         allowedWidths,
       );
+      return withSecurityHeaders(response);
     }
-    return handler.fetch(request, env, ctx);
+    return withSecurityHeaders(await handler.fetch(request, env, ctx));
   },
 };
+
+function withSecurityHeaders(response: Response) {
+  const headers = new Headers(response.headers);
+  headers.set(
+    "content-security-policy",
+    "object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests",
+  );
+  headers.set("cross-origin-opener-policy", "same-origin-allow-popups");
+  headers.set("permissions-policy", "camera=(), microphone=(), geolocation=(), payment=()");
+  headers.set("referrer-policy", "strict-origin-when-cross-origin");
+  headers.set(
+    "strict-transport-security",
+    "max-age=31536000; includeSubDomains",
+  );
+  headers.set("x-content-type-options", "nosniff");
+  headers.set("x-frame-options", "DENY");
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
 
 export default worker;

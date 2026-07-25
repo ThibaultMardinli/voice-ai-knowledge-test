@@ -173,6 +173,15 @@ export default async function CredentialPage({
       </section>
 
       <section className="page-panel form-block legal-copy">
+        <strong>Public verification, not transferable access.</strong> This URL
+        is intentionally public so employers and platforms can verify the
+        credential. It is not a login, password, or bearer token. Copying it
+        does not change the named recipient, signed issuer record, status, or
+        underlying identity binding. The recipient email and signing key are
+        never published.
+      </section>
+
+      <section className="page-panel form-block legal-copy">
         This is an independent Voice AI Space knowledge credential. It is not a
         government license, academic degree, regulated professional
         qualification, or claim of 1EdTech conformance certification. Open
