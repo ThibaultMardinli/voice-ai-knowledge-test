@@ -16,6 +16,13 @@ export function generateMetadata(): Metadata {
     description:
       "Independent, verifiable Voice AI knowledge credentials issued by Voice AI Space.",
     applicationName: "Voice AI Space Certification",
+    icons: {
+      icon: [
+        { url: "/favicon.png", type: "image/png", sizes: "48x48" },
+        { url: "/favicon.webp", type: "image/webp", sizes: "48x48" },
+      ],
+      shortcut: "/favicon.png",
+    },
     alternates: { canonical: "/" },
     openGraph: {
       type: "website",
