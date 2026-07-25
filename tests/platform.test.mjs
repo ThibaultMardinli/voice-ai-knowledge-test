@@ -26,7 +26,7 @@ test("keeps assessment creation behind authentication", async () => {
 });
 
 test("keeps the question bank behind the administrator allowlist", async () => {
-  const [page, route] = await Promise.all([
+  const [page, route, home, layout] = await Promise.all([
     readFile(
       new URL("../app/admin/questions/page.tsx", import.meta.url),
       "utf8",
@@ -38,11 +38,29 @@ test("keeps the question bank behind the administrator allowlist", async () => {
       ),
       "utf8",
     ),
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
   ]);
   assert.match(page, /requireCandidate\(\"\/admin\/questions\"\)/);
   assert.match(page, /isAdmin\(candidate\.email\)/);
   assert.match(route, /adminAuthorized/);
   assert.match(route, /Not found/);
+  assert.match(home, /Open Question Bank/);
+  assert.match(layout, /Question Bank/);
+});
+
+test("uses the Voice AI Space monochrome brand palette", async () => {
+  const [styles, badgeGenerator] = await Promise.all([
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(
+      new URL("../scripts/generate-badges.mjs", import.meta.url),
+      "utf8",
+    ),
+  ]);
+  assert.match(styles, /--ink: #020817/);
+  assert.match(styles, /--paper: #ffffff/);
+  assert.doesNotMatch(styles, /#c7ff35|#f6f5ef|#7da600/i);
+  assert.doesNotMatch(badgeGenerator, /#c7ff35|#f6f5ef/i);
 });
 
 test("publishes the non-accreditation disclosure with criteria", async () => {

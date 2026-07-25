@@ -12,13 +12,18 @@ import {
   MAX_ATTEMPTS_PER_WINDOW,
   PASS_PERCENTAGE,
 } from "@/lib/policy";
-import { issuanceEnabled } from "@/lib/runtime";
+import { questionBankStatus } from "@/lib/question-bank.server";
+import { deploymentStage, issuanceEnabled } from "@/lib/runtime";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const candidate = await getCandidate();
   const isOpen = issuanceEnabled();
+  const isDevelopment = deploymentStage() === "development";
+  const bankStatus = isDevelopment ? await questionBankStatus() : null;
+  const bankQuestionCount =
+    bankStatus?.counts.reduce((total, row) => total + Number(row.count), 0) ?? 0;
   const assessmentHref = isOpen
     ? candidate
       ? "/assessment"
@@ -27,6 +32,21 @@ export default async function HomePage() {
 
   return (
     <>
+      {isDevelopment ? (
+        <section className="preview-access" aria-label="Development question bank">
+          <div className="preview-access-count">{bankQuestionCount}</div>
+          <div>
+            <strong>Questions are in the private Question Bank</strong>
+            <p>
+              Open the administrator dashboard to search questions, reveal
+              answers and rationales, or import reviewed replacements.
+            </p>
+          </div>
+          <Link className="button" href="/admin/questions">
+            Open Question Bank →
+          </Link>
+        </section>
+      ) : null}
       <section className="hero">
         <div className="hero-copy">
           <span className="eyebrow">VOICE AI KNOWLEDGE STANDARD · {EXAM_VERSION}</span>
@@ -196,7 +216,7 @@ export default async function HomePage() {
           <span className="eyebrow">READY WHEN YOU ARE</span>
           <h2>Your knowledge should travel with you.</h2>
         </div>
-            <Link className="button" href={assessmentHref}>
+        <Link className="button" href={assessmentHref}>
           {isOpen
             ? candidate
               ? "Choose your level"

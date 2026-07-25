@@ -72,6 +72,11 @@ export default function RootLayout({
               <Link href="/#standard">Standard</Link>
               <Link href="/methodology">Methodology</Link>
               <Link href="/verify">Verify</Link>
+              {isDevelopment ? (
+                <Link className="admin-nav-link" href="/admin/questions">
+                  Question Bank
+                </Link>
+              ) : null}
             </nav>
           </header>
           <main>{children}</main>
