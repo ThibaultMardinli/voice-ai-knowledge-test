@@ -828,7 +828,6 @@ select:focus-visible {
 .learn-hero {
   background: var(--paper);
   border: 2px solid var(--ink);
-  border-top: 0;
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
 }
@@ -943,13 +942,13 @@ select:focus-visible {
 
 .knowledge-card {
   background: var(--paper);
+  border-right: 1px solid var(--line);
   min-height: 290px;
   padding: 26px;
 }
 
-.knowledge-card:nth-child(3n + 2),
-.knowledge-card:nth-child(3n + 3) {
-  border-left: 1px solid var(--line);
+.knowledge-card:nth-child(3n) {
+  border-right: 0;
 }
 
 .knowledge-card:nth-child(n + 4) {
@@ -1598,9 +1597,8 @@ select:focus-visible {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .knowledge-card:nth-child(3n + 2),
-  .knowledge-card:nth-child(3n + 3) {
-    border-left: 0;
+  .knowledge-card:nth-child(3n) {
+    border-right: 1px solid var(--line);
   }
 
   .knowledge-card:nth-child(n + 4) {
@@ -1608,7 +1606,7 @@ select:focus-visible {
   }
 
   .knowledge-card:nth-child(2n) {
-    border-left: 1px solid var(--line);
+    border-right: 0;
   }
 
   .knowledge-card:nth-child(n + 3) {
@@ -1702,9 +1700,14 @@ select:focus-visible {
   }
 
   .knowledge-filters button + button,
-  .knowledge-filters button:nth-child(5),
-  .knowledge-card:nth-child(2n) {
+  .knowledge-filters button:nth-child(5) {
     border-left: 0;
+  }
+
+  .knowledge-card,
+  .knowledge-card:nth-child(3n),
+  .knowledge-card:nth-child(2n) {
+    border-right: 0;
   }
 
   .knowledge-filters button:nth-child(n + 2),
