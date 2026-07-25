@@ -38,6 +38,16 @@ export function KnowledgeLibrary({
     });
   }, [entries, filter, query]);
 
+  const gridClassName = [
+    "knowledge-grid",
+    `knowledge-grid--desktop-remainder-${filtered.length % 3}`,
+    `knowledge-grid--tablet-remainder-${filtered.length % 2}`,
+    filtered.length > 3 ? "knowledge-grid--desktop-multiple-rows" : "",
+    filtered.length > 2 ? "knowledge-grid--tablet-multiple-rows" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <>
       <section className="knowledge-controls" aria-label="Knowledge filters">
@@ -73,7 +83,7 @@ export function KnowledgeLibrary({
       </div>
 
       {filtered.length ? (
-        <section className="knowledge-grid">
+        <section className={gridClassName}>
           {filtered.map((entry) => {
             const domain = DOMAINS.find((item) => item.id === entry.domain);
             return (
