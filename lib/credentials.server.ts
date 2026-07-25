@@ -1,7 +1,10 @@
 import "server-only";
 import { getRawDb } from "@/db";
-import { newId } from "./crypto.server";
-import { type CredentialRecord } from "./open-badges.server";
+import { newId, signCredential } from "./crypto.server";
+import {
+  credentialV3,
+  type CredentialRecord,
+} from "./open-badges.server";
 
 export async function getCredential(id: string) {
   const row = await getRawDb()
@@ -82,4 +85,11 @@ export function credentialState(record: CredentialRecord) {
   if (record.status === "revoked") return "revoked" as const;
   if (Date.parse(record.expiresAt) <= Date.now()) return "expired" as const;
   return "valid" as const;
+}
+
+export function currentCredentialProof(record: CredentialRecord) {
+  return signCredential(
+    credentialV3(record) as Record<string, unknown>,
+    record.recipientId,
+  );
 }

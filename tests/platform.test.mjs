@@ -152,3 +152,19 @@ test("applies security headers to every hosted response", async () => {
   assert.match(worker, /permissions-policy/);
   assert.match(worker, /x-content-type-options/);
 });
+
+test("serves credential proofs from the current canonical issuer domain", async () => {
+  const [credentials, proofRoute] = await Promise.all([
+    readFile(new URL("../lib/credentials.server.ts", import.meta.url), "utf8"),
+    readFile(
+      new URL(
+        "../app/api/open-badges/v3/credentials/[credentialId]/route.ts",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ]);
+  assert.match(credentials, /currentCredentialProof/);
+  assert.match(credentials, /credentialV3\(record\)/);
+  assert.match(proofRoute, /await currentCredentialProof\(credential\)/);
+});

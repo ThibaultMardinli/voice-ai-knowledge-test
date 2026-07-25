@@ -1,4 +1,7 @@
-import { getCredential } from "@/lib/credentials.server";
+import {
+  currentCredentialProof,
+  getCredential,
+} from "@/lib/credentials.server";
 import { json } from "@/lib/http";
 
 export async function GET(
@@ -17,10 +20,8 @@ export async function GET(
       { status: 410 },
     );
   }
-  if (!credential.ob3Jwt) {
-    return json({ error: "Credential proof unavailable" }, { status: 503 });
-  }
-  return new Response(credential.ob3Jwt, {
+  const proof = await currentCredentialProof(credential);
+  return new Response(proof, {
     headers: {
       "content-type": "application/vc+jwt",
       "content-disposition": `attachment; filename="${credential.id}.jwt"`,

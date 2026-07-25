@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CredentialActions } from "@/components/CredentialActions";
 import {
+  currentCredentialProof,
   credentialState,
   getCredential,
 } from "@/lib/credentials.server";
@@ -40,13 +41,11 @@ export default async function CredentialPage({
 
   const state = credentialState(credential);
   let signatureVerified = false;
-  if (credential.ob3Jwt) {
-    try {
-      await verifyCredential(credential.ob3Jwt);
-      signatureVerified = true;
-    } catch {
-      signatureVerified = false;
-    }
+  try {
+    await verifyCredential(await currentCredentialProof(credential));
+    signatureVerified = true;
+  } catch {
+    signatureVerified = false;
   }
   const level = LEVELS[credential.level as LevelId];
   const base = publicBaseUrl();

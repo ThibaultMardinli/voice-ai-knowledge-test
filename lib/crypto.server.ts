@@ -39,7 +39,7 @@ export async function signCredential(
     "RS256",
   );
 
-  return new SignJWT(payload)
+  const token = new SignJWT(payload)
     .setProtectedHeader({
       alg: "RS256",
       typ: "JWT",
@@ -47,9 +47,16 @@ export async function signCredential(
     })
     .setIssuer(String(payload.issuer && (payload.issuer as { id: string }).id))
     .setSubject(subject)
-    .setJti(String(payload.id))
-    .setIssuedAt()
-    .sign(privateKey);
+    .setJti(String(payload.id));
+  const validFrom = typeof payload.validFrom === "string"
+    ? Date.parse(payload.validFrom)
+    : Number.NaN;
+  token.setIssuedAt(
+    Number.isFinite(validFrom)
+      ? Math.floor(validFrom / 1000)
+      : Math.floor(Date.now() / 1000),
+  );
+  return token.sign(privateKey);
 }
 
 export async function verifyCredential(jwt: string) {
