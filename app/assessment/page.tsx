@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { requireCandidate } from "../chatgpt-auth";
+import { getCandidate, requireCandidate } from "../chatgpt-auth";
 import { StartAssessmentForm } from "@/components/StartAssessmentForm";
 import {
   ATTEMPT_WINDOW_DAYS,
@@ -8,19 +8,23 @@ import {
   MAX_ATTEMPTS_PER_WINDOW,
   PASS_PERCENTAGE,
 } from "@/lib/policy";
-import { issuanceEnabled } from "@/lib/runtime";
+import { assessmentEnabled, practiceMode } from "@/lib/runtime";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Start assessment" };
 
 export default async function AssessmentStartPage() {
-  const candidate = await requireCandidate("/assessment");
-  if (!issuanceEnabled()) {
+  const isPractice = practiceMode();
+  const candidate = isPractice
+    ? await getCandidate()
+    : await requireCandidate("/assessment");
+
+  if (!assessmentEnabled()) {
     return (
       <div className="page-wrap">
         <section className="page-panel page-heading">
-          <span className="eyebrow">ISSUANCE LOCKED</span>
+          <span className="eyebrow">ASSESSMENT CLOSED</span>
           <h1 className="page-title">Review before release.</h1>
           <p>
             The platform is ready, but certification attempts remain closed
@@ -42,22 +46,30 @@ export default async function AssessmentStartPage() {
   return (
     <div className="page-wrap">
       <section className="page-panel page-heading">
-        <span className="eyebrow">CANDIDATE CHECK-IN</span>
-        <h1 className="page-title">Choose your level.</h1>
+        <span className="eyebrow">
+          {isPractice ? "PUBLIC BETA" : "CANDIDATE CHECK-IN"}
+        </span>
+        <h1 className="page-title">
+          {isPractice ? "Choose your quiz level." : "Choose your level."}
+        </h1>
         <p>
-          Your secure session contains {EXAM_QUESTION_COUNT} questions and closes
-          after {EXAM_DURATION_MINUTES} minutes. You need {PASS_PERCENTAGE}% to
-          earn a credential.
+          Your session contains {EXAM_QUESTION_COUNT} questions and closes after{" "}
+          {EXAM_DURATION_MINUTES} minutes. You need {PASS_PERCENTAGE}% to pass.
+          {isPractice
+            ? " You will receive an immediate beta result; this public test does not issue a certification credential."
+            : " A passing result earns a credential."}
         </p>
       </section>
       <section className="page-panel form-block">
         <StartAssessmentForm
-          defaultName={candidate.fullName ?? ""}
-          candidateEmail={candidate.email}
+          defaultName={candidate?.fullName ?? ""}
+          candidateEmail={candidate?.email ?? null}
+          practiceMode={isPractice}
         />
       </section>
       <section className="page-panel form-block legal-copy">
-        <strong>Attempt policy.</strong> Each authenticated candidate may begin{" "}
+        <strong>Attempt policy.</strong> Each{" "}
+        {isPractice ? "browser" : "authenticated candidate"} may begin{" "}
         {MAX_ATTEMPTS_PER_WINDOW} attempts per level in a rolling{" "}
         {ATTEMPT_WINDOW_DAYS}-day period. Starting an attempt consumes one slot.
         Answers are saved to the server as you progress. Correct answers are not

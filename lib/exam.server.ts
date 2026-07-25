@@ -22,7 +22,11 @@ import {
   scaledScore,
   type LevelId,
 } from "./policy";
-import { issuanceEnabled } from "./runtime";
+import {
+  assessmentEnabled,
+  issuanceEnabled,
+  practiceMode,
+} from "./runtime";
 
 type ExamQuestion = {
   id: number;
@@ -77,16 +81,16 @@ export class ExamError extends Error {
 }
 
 export async function startExam(input: {
-  email: string;
+  identityKey: string;
   candidateName: string;
   level: number;
   consent: boolean;
 }) {
-  if (!issuanceEnabled()) {
+  if (!assessmentEnabled()) {
     throw new ExamError(
-      "Certification issuance is not open yet.",
+      "The assessment is not open yet.",
       503,
-      "issuance_not_open",
+      "assessment_not_open",
     );
   }
   if (!input.consent) {
@@ -101,7 +105,7 @@ export async function startExam(input: {
   }
 
   const name = normalizeName(input.candidateName);
-  const identity = candidateId(input.email);
+  const identity = candidateId(input.identityKey);
   const db = getRawDb();
   const windowStart = new Date(
     Date.now() - ATTEMPT_WINDOW_DAYS * 24 * 60 * 60 * 1000,
@@ -172,9 +176,9 @@ export async function startExam(input: {
   };
 }
 
-export async function loadSession(sessionId: string, email: string) {
+export async function loadSession(sessionId: string, identityKey: string) {
   const session = await getSession(sessionId);
-  assertOwner(session, email);
+  assertOwner(session, identityKey);
   const ids = parseQuestionIds(session.question_ids);
   const questionRows = await loadQuestions(ids);
   const questionMap = new Map(
@@ -227,12 +231,12 @@ export async function loadSession(sessionId: string, email: string) {
 
 export async function recordAnswer(input: {
   sessionId: string;
-  email: string;
+  identityKey: string;
   questionId: number;
   selectedOption: number;
 }) {
   const session = await getSession(input.sessionId);
-  assertOwner(session, input.email);
+  assertOwner(session, input.identityKey);
   assertActive(session);
   const questionIds = parseQuestionIds(session.question_ids);
   if (!questionIds.includes(input.questionId)) {
@@ -262,9 +266,13 @@ export async function recordAnswer(input: {
   return { saved: true, answeredAt: now };
 }
 
-export async function submitExam(sessionId: string, email: string) {
+export async function submitExam(
+  sessionId: string,
+  identityKey: string,
+  credentialEmail: string | null,
+) {
   const session = await getSession(sessionId);
-  assertOwner(session, email);
+  assertOwner(session, identityKey);
   if (session.status === "completed") {
     return sessionResult(session);
   }
@@ -324,10 +332,15 @@ export async function submitExam(sessionId: string, email: string) {
 
   const now = new Date();
   let credential: CredentialRecord | null = null;
-  if (passed && issuanceEnabled()) {
+  const canIssueCredential =
+    passed &&
+    issuanceEnabled() &&
+    !practiceMode() &&
+    Boolean(credentialEmail);
+  if (canIssueCredential && credentialEmail) {
     credential = await createCredential({
       session,
-      email,
+      email: credentialEmail,
       score,
       percentage,
       issuedAt: now,
@@ -411,7 +424,7 @@ export async function submitExam(sessionId: string, email: string) {
     passed,
     domainResults,
     credentialId: credential?.id ?? null,
-    issuancePending: passed && !issuanceEnabled(),
+    issuancePending: passed && !credential,
   };
 }
 
@@ -462,8 +475,8 @@ async function getSession(id: string) {
   return session;
 }
 
-function assertOwner(session: SessionRow, email: string) {
-  if (session.candidate_id !== candidateId(email)) {
+function assertOwner(session: SessionRow, identityKey: string) {
+  if (session.candidate_id !== candidateId(identityKey)) {
     throw new ExamError("Exam session not found.", 404, "not_found");
   }
 }
@@ -479,13 +492,18 @@ function assertActive(session: SessionRow) {
 
 async function selectQuestions(level: number) {
   const selected: ExamQuestion[] = [];
+  const useLegacyPracticeBank = practiceMode();
   for (const domain of DOMAINS) {
     const rows = await getRawDb()
       .prepare(
         `SELECT id, domain, level, prompt, options_json, correct_option, rationale
          FROM question_bank
          WHERE exam_version = ? AND level = ? AND domain = ?
-           AND status = 'approved'`,
+           AND ${
+             useLegacyPracticeBank
+               ? "status = 'draft' AND question_key LIKE 'legacy-public-%'"
+               : "status = 'approved'"
+           }`,
       )
       .bind(EXAM_VERSION, level, domain.id)
       .all<{

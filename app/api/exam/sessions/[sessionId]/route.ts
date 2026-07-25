@@ -1,4 +1,4 @@
-import { getCandidate } from "@/app/chatgpt-auth";
+import { getAssessmentIdentity } from "@/lib/assessment-identity.server";
 import { loadSession } from "@/lib/exam.server";
 import { apiError, json } from "@/lib/http";
 
@@ -7,15 +7,15 @@ export async function GET(
   context: { params: Promise<{ sessionId: string }> },
 ) {
   try {
-    const candidate = await getCandidate();
-    if (!candidate) {
+    const identity = await getAssessmentIdentity();
+    if (!identity) {
       return json(
         { error: "Sign in is required.", code: "authentication_required" },
         { status: 401 },
       );
     }
     const { sessionId } = await context.params;
-    return json(await loadSession(sessionId, candidate.email));
+    return json(await loadSession(sessionId, identity.identityKey));
   } catch (error) {
     return apiError(error);
   }

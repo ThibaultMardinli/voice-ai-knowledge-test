@@ -8,6 +8,8 @@ type RuntimeValues = {
   OB3_PUBLIC_JWK?: string;
   OB3_KEY_ID?: string;
   ISSUANCE_ENABLED?: string;
+  ASSESSMENT_ENABLED?: string;
+  PRACTICE_MODE?: string;
   DEPLOYMENT_STAGE?: string;
   ADMIN_EMAILS?: string;
   QUESTION_BANK_IMPORT_SECRET?: string;
@@ -36,6 +38,14 @@ export function optionalRuntimeValue(name: keyof RuntimeValues) {
 
 export function issuanceEnabled() {
   return values().ISSUANCE_ENABLED === "true";
+}
+
+export function assessmentEnabled() {
+  return values().ASSESSMENT_ENABLED === "true" || issuanceEnabled();
+}
+
+export function practiceMode() {
+  return values().PRACTICE_MODE === "true";
 }
 
 export function deploymentStage() {

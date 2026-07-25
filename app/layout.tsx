@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { deploymentStage } from "@/lib/runtime";
+import { getCandidate } from "./chatgpt-auth";
+import { deploymentStage, isAdmin } from "@/lib/runtime";
 import "./globals.css";
 
 export function generateMetadata(): Metadata {
-  const isDevelopment = deploymentStage() === "development";
+  const isProduction = deploymentStage() === "production";
 
   return {
     metadataBase: new URL(
-      isDevelopment
-        ? "https://voice-ai-certification.t-bot85.chatgpt.site"
-        : "https://credentials.voiceaispace.com",
+      isProduction
+        ? "https://credentials.voiceaispace.com"
+        : "https://voice-ai-certification.t-bot85.chatgpt.site",
     ),
     title: {
       default: "Voice AI Space Certification",
@@ -42,24 +43,28 @@ export function generateMetadata(): Metadata {
         "Independent, verifiable Voice AI knowledge credentials.",
       images: ["/og.png"],
     },
-    robots: isDevelopment
-      ? { index: false, follow: false, nocache: true }
-      : { index: true, follow: true },
+    robots: isProduction
+      ? { index: true, follow: true }
+      : { index: false, follow: false, nocache: true },
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const isDevelopment = deploymentStage() === "development";
+  const stage = deploymentStage();
+  const candidate = await getCandidate();
+  const showAdmin = candidate ? isAdmin(candidate.email) : false;
 
   return (
     <html lang="en">
       <body>
         <div className="site-shell">
-          {isDevelopment ? (
+          {stage !== "production" ? (
             <div className="dev-banner" role="status">
-              DEVELOPMENT PREVIEW · ISSUANCE DISABLED
+              {stage === "beta"
+                ? "PUBLIC BETA · QUIZ OPEN · CREDENTIAL ISSUANCE DISABLED"
+                : "DEVELOPMENT PREVIEW · ISSUANCE DISABLED"}
             </div>
           ) : null}
           <header className="site-header">
@@ -72,11 +77,12 @@ export default function RootLayout({
               <Link href="/#standard">Standard</Link>
               <Link href="/methodology">Methodology</Link>
               <Link href="/verify">Verify</Link>
-              {isDevelopment ? (
-                <Link className="admin-nav-link" href="/admin/questions">
-                  Question Bank
-                </Link>
+              {showAdmin ? (
+                <Link href="/admin/questions">Question Bank</Link>
               ) : null}
+              <Link className="admin-nav-link" href="/assessment">
+                Take Quiz
+              </Link>
             </nav>
           </header>
           <main>{children}</main>

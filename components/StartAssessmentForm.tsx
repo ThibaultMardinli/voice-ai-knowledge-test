@@ -7,9 +7,11 @@ import { LEVELS } from "@/lib/policy";
 export function StartAssessmentForm({
   defaultName,
   candidateEmail,
+  practiceMode,
 }: {
   defaultName: string;
-  candidateEmail: string;
+  candidateEmail: string | null;
+  practiceMode: boolean;
 }) {
   const router = useRouter();
   const [candidateName, setCandidateName] = useState(defaultName);
@@ -47,7 +49,9 @@ export function StartAssessmentForm({
   return (
     <form className="form-grid" onSubmit={submit}>
       <div className="field">
-        <label htmlFor="candidate-name">Name on credential</label>
+        <label htmlFor="candidate-name">
+          {practiceMode ? "Name for your result" : "Name on credential"}
+        </label>
         <input
           id="candidate-name"
           value={candidateName}
@@ -56,13 +60,19 @@ export function StartAssessmentForm({
           maxLength={100}
           required
         />
-        <span className="legal-copy">
-          Signed in as {candidateEmail}. Your email will not be shown publicly.
-        </span>
+        {candidateEmail ? (
+          <span className="legal-copy">
+            Signed in as {candidateEmail}. Your email will not be shown publicly.
+          </span>
+        ) : (
+          <span className="legal-copy">
+            No account required. Your result is private to this browser.
+          </span>
+        )}
       </div>
 
       <fieldset className="field" style={{ border: 0, padding: 0, margin: 0 }}>
-        <legend>Certification level</legend>
+        <legend>{practiceMode ? "Quiz level" : "Certification level"}</legend>
         <div className="choice-grid">
           {Object.entries(LEVELS).map(([id, definition]) => (
             <label className="choice" key={definition.slug}>
@@ -88,9 +98,9 @@ export function StartAssessmentForm({
           required
         />
         <span>
-          I confirm that I am the named candidate, will complete this assessment
-          without unauthorized assistance, and consent to publication of my name,
-          score, credential status, and issuance dates if I pass.
+          {practiceMode
+            ? "I confirm this is my own attempt. I understand this beta uses the public legacy practice bank, records my result, and does not issue a certification credential."
+            : "I confirm that I am the named candidate, will complete this assessment without unauthorized assistance, and consent to publication of my name, score, credential status, and issuance dates if I pass."}
         </span>
       </label>
 
@@ -101,7 +111,11 @@ export function StartAssessmentForm({
       )}
 
       <button className="button signal" type="submit" disabled={pending || !consent}>
-        {pending ? "Creating secure session…" : "Begin timed assessment →"}
+        {pending
+          ? "Creating session…"
+          : practiceMode
+            ? "Begin knowledge test →"
+            : "Begin timed assessment →"}
       </button>
     </form>
   );

@@ -13,26 +13,29 @@ import {
   PASS_PERCENTAGE,
 } from "@/lib/policy";
 import { questionBankStatus } from "@/lib/question-bank.server";
-import { deploymentStage, issuanceEnabled } from "@/lib/runtime";
+import { assessmentEnabled, isAdmin, practiceMode } from "@/lib/runtime";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const candidate = await getCandidate();
-  const isOpen = issuanceEnabled();
-  const isDevelopment = deploymentStage() === "development";
-  const bankStatus = isDevelopment ? await questionBankStatus() : null;
+  const isOpen = assessmentEnabled();
+  const isPractice = practiceMode();
+  const isAdminUser = candidate ? isAdmin(candidate.email) : false;
+  const bankStatus = isAdminUser ? await questionBankStatus() : null;
   const bankQuestionCount =
     bankStatus?.counts.reduce((total, row) => total + Number(row.count), 0) ?? 0;
-  const assessmentHref = isOpen
-    ? candidate
-      ? "/assessment"
-      : chatGPTSignInPath("/assessment")
-    : "/methodology";
+  const assessmentHref = isPractice
+    ? "/assessment"
+    : isOpen
+      ? candidate
+        ? "/assessment"
+        : chatGPTSignInPath("/assessment")
+      : "/methodology";
 
   return (
     <>
-      {isDevelopment ? (
+      {isAdminUser ? (
         <section className="preview-access" aria-label="Development question bank">
           <div className="preview-access-count">{bankQuestionCount}</div>
           <div>
@@ -60,11 +63,13 @@ export default async function HomePage() {
           </p>
           <div className="hero-actions">
             <Link className="button signal" href={assessmentHref}>
-              {isOpen
-                ? candidate
-                  ? "Start assessment"
-                  : "Sign in to certify"
-                : "Review the release standard"}{" "}
+              {isPractice
+                ? "Start the quiz"
+                : isOpen
+                  ? candidate
+                    ? "Start assessment"
+                    : "Sign in to certify"
+                  : "Review the release standard"}{" "}
               →
             </Link>
             <Link className="button secondary" href="/verify">
@@ -73,12 +78,20 @@ export default async function HomePage() {
           </div>
         </div>
         <aside className="hero-rail" aria-label="Credential trust properties">
-          {[
-            ["FORMAT", "Open Badges 3.0 + 2.0"],
-            ["ASSESSMENT", `${EXAM_QUESTION_COUNT} server-scored questions`],
-            ["VALIDITY", `${Math.round(CREDENTIAL_VALIDITY_DAYS / 365)} years`],
-            ["VERIFICATION", "Public, signed, revocable"],
-          ].map(([label, value]) => (
+          {(isPractice
+            ? [
+                ["MODE", "Public beta"],
+                ["ASSESSMENT", `${EXAM_QUESTION_COUNT} server-scored questions`],
+                ["RESULT", "Immediate score"],
+                ["CREDENTIAL", "Not issued in beta"],
+              ]
+            : [
+                ["FORMAT", "Open Badges 3.0 + 2.0"],
+                ["ASSESSMENT", `${EXAM_QUESTION_COUNT} server-scored questions`],
+                ["VALIDITY", `${Math.round(CREDENTIAL_VALIDITY_DAYS / 365)} years`],
+                ["VERIFICATION", "Public, signed, revocable"],
+              ]
+          ).map(([label, value]) => (
             <div className="trust-item" key={label}>
               <span className="eyebrow">{label}</span>
               <strong>{value}</strong>
@@ -94,8 +107,9 @@ export default async function HomePage() {
             <h2>Four levels. One standard.</h2>
           </div>
           <p>
-            Each credential is independently earned. Choose the level that
-            reflects the decisions you make in real work.
+            {isPractice
+              ? "The public beta tests the same four levels. Formal credentials launch after the private question bank completes validation."
+              : "Each credential is independently earned. Choose the level that reflects the decisions you make in real work."}
           </p>
         </div>
         <div className="credential-grid">
@@ -138,8 +152,8 @@ export default async function HomePage() {
             <span className="eyebrow">OUR COMMITMENT</span>
             <h3>No vanity badges.</h3>
             <p>
-              Correct answers never reach the browser. Results are scored on
-              the server, signed by the issuer, and independently verifiable.
+              Answers are server-scored during each attempt. Formal results are
+              signed by the issuer and independently verifiable.
             </p>
           </div>
           <div className="standard-list">
@@ -217,11 +231,13 @@ export default async function HomePage() {
           <h2>Your knowledge should travel with you.</h2>
         </div>
         <Link className="button" href={assessmentHref}>
-          {isOpen
-            ? candidate
-              ? "Choose your level"
-              : "Sign in to begin"
-            : "See launch controls"}{" "}
+          {isPractice
+            ? "Take the quiz"
+            : isOpen
+              ? candidate
+                ? "Choose your level"
+                : "Sign in to begin"
+              : "See launch controls"}{" "}
           →
         </Link>
       </section>

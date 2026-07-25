@@ -11,18 +11,29 @@ test("defines the public credential standard", async () => {
   assert.match(page, /No vanity badges/i);
 });
 
-test("keeps assessment creation behind authentication", async () => {
-  const route = await readFile(
-    new URL("../app/api/exam/start/route.ts", import.meta.url),
-    "utf8",
-  );
-  assert.match(route, /const candidate = await getCandidate\(\)/);
+test("supports anonymous beta attempts with private browser identity", async () => {
+  const [route, identity, exam] = await Promise.all([
+    readFile(new URL("../app/api/exam/start/route.ts", import.meta.url), "utf8"),
+    readFile(
+      new URL("../lib/assessment-identity.server.ts", import.meta.url),
+      "utf8",
+    ),
+    readFile(new URL("../lib/exam.server.ts", import.meta.url), "utf8"),
+  ]);
+  assert.match(route, /getAssessmentIdentity/);
+  assert.match(route, /createPracticeIdentity/);
+  assert.match(route, /set-cookie/i);
   assert.match(route, /authentication_required/);
   assert.match(route, /status: 401/);
   assert.ok(
-    route.indexOf("if (!candidate)") < route.indexOf("await request.json()"),
-    "authentication must be checked before request data is processed",
+    route.indexOf("getAssessmentIdentity") < route.indexOf("await request.json()"),
+    "assessment identity must be established before request data is processed",
   );
+  assert.match(identity, /"HttpOnly"/);
+  assert.match(identity, /"Secure"/);
+  assert.match(identity, /"SameSite=Lax"/);
+  assert.match(exam, /legacy-public-%/);
+  assert.match(exam, /!practiceMode\(\)/);
 });
 
 test("keeps the question bank behind the administrator allowlist", async () => {

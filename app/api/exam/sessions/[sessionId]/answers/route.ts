@@ -1,4 +1,4 @@
-import { getCandidate } from "@/app/chatgpt-auth";
+import { getAssessmentIdentity } from "@/lib/assessment-identity.server";
 import { recordAnswer } from "@/lib/exam.server";
 import { apiError, json } from "@/lib/http";
 
@@ -7,8 +7,8 @@ export async function PUT(
   context: { params: Promise<{ sessionId: string }> },
 ) {
   try {
-    const candidate = await getCandidate();
-    if (!candidate) {
+    const identity = await getAssessmentIdentity();
+    if (!identity) {
       return json(
         { error: "Sign in is required.", code: "authentication_required" },
         { status: 401 },
@@ -22,7 +22,7 @@ export async function PUT(
     return json(
       await recordAnswer({
         sessionId,
-        email: candidate.email,
+        identityKey: identity.identityKey,
         questionId: Number(body.questionId),
         selectedOption: Number(body.selectedOption),
       }),

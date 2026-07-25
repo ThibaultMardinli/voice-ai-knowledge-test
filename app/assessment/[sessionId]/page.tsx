@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { requireCandidate } from "@/app/chatgpt-auth";
 import { ExamRunner } from "@/components/ExamRunner";
+import { requireAssessmentIdentity } from "@/lib/assessment-identity.server";
 import { ExamError, loadSession } from "@/lib/exam.server";
 
 export const dynamic = "force-dynamic";
@@ -13,9 +13,9 @@ export default async function ActiveAssessmentPage({
   params: Promise<{ sessionId: string }>;
 }) {
   const { sessionId } = await params;
-  const candidate = await requireCandidate(`/assessment/${sessionId}`);
+  const identity = await requireAssessmentIdentity(`/assessment/${sessionId}`);
   try {
-    const session = await loadSession(sessionId, candidate.email);
+    const session = await loadSession(sessionId, identity.identityKey);
     if (session.status === "completed") redirect(`/results/${sessionId}`);
     return <ExamRunner session={session} />;
   } catch (error) {

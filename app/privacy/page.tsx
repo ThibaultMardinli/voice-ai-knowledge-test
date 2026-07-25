@@ -23,7 +23,11 @@ export default function PrivacyPage() {
         ],
         [
           "Data collected",
-          "Authenticated account email and name, candidate-selected credential name, assessment level, question identifiers, submitted options, timing, score, domain results, credential status, and security audit events.",
+          "For the public beta: a random browser identifier, candidate-entered result name, assessment level, question identifiers, submitted options, timing, score, and domain results. For certification: authenticated account email and name, candidate-selected credential name, credential status, and security audit events are also processed.",
+        ],
+        [
+          "Public beta cookie",
+          "The beta sets a secure, HttpOnly practice identifier cookie for 30 days. It contains a random identifier—not your email—and is used to keep your session private to your browser and enforce attempt limits. Beta results are not published as credentials.",
         ],
         [
           "Public credential data",
