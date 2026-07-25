@@ -33,7 +33,8 @@ test("supports anonymous beta attempts with private browser identity", async () 
   assert.match(identity, /"Secure"/);
   assert.match(identity, /"SameSite=Lax"/);
   assert.match(exam, /legacy-public-%/);
-  assert.match(exam, /!practiceMode\(\)/);
+  assert.match(exam, /claimCredential/);
+  assert.match(exam, /INSERT OR IGNORE INTO credentials/);
 });
 
 test("keeps the question bank behind the administrator allowlist", async () => {

@@ -22,7 +22,7 @@ export async function PUT(
     return json(
       await recordAnswer({
         sessionId,
-        identityKey: identity.identityKey,
+        identityKeys: identity.identityKeys,
         questionId: Number(body.questionId),
         selectedOption: Number(body.selectedOption),
       }),

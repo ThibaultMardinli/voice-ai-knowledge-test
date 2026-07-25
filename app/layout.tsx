@@ -63,7 +63,7 @@ export default async function RootLayout({
           {stage !== "production" ? (
             <div className="dev-banner" role="status">
               {stage === "beta"
-                ? "PUBLIC BETA · QUIZ OPEN · CREDENTIAL ISSUANCE DISABLED"
+                ? "PUBLIC BETA · QUIZ OPEN · CREDENTIALS ENABLED"
                 : "DEVELOPMENT PREVIEW · ISSUANCE DISABLED"}
             </div>
           ) : null}

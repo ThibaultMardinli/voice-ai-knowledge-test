@@ -18,7 +18,7 @@ export async function POST(
     return json(
       await submitExam(
         sessionId,
-        identity.identityKey,
+        identity.identityKeys,
         identity.credentialEmail,
       ),
     );

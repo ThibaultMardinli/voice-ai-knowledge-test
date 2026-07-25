@@ -27,7 +27,7 @@ export default function PrivacyPage() {
         ],
         [
           "Public beta cookie",
-          "The beta sets a secure, HttpOnly practice identifier cookie for 30 days. It contains a random identifier—not your email—and is used to keep your session private to your browser and enforce attempt limits. Beta results are not published as credentials.",
+          "The beta sets a secure, HttpOnly practice identifier cookie for 30 days. It contains a random identifier—not your email—and is used to keep your session private to your browser and enforce attempt limits. A passing result is published as a credential only after you choose to claim it and sign in.",
         ],
         [
           "Public credential data",

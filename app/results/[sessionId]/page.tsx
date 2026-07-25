@@ -23,7 +23,7 @@ export default async function ResultsPage({
   const identity = await requireAssessmentIdentity(`/results/${sessionId}`);
   const isPractice = practiceMode();
   try {
-    const session = await loadSession(sessionId, identity.identityKey);
+    const session = await loadSession(sessionId, identity.identityKeys);
     if (session.status !== "completed") redirect(`/assessment/${sessionId}`);
     const percentage = session.percentage ?? 0;
     const passed = percentage >= PASS_PERCENTAGE;
@@ -42,7 +42,7 @@ export default async function ResultsPage({
             <span className="eyebrow">
               {isPractice
                 ? passed
-                  ? "BETA KNOWLEDGE TEST PASSED"
+                  ? "KNOWLEDGE TEST PASSED"
                   : "BETA KNOWLEDGE TEST COMPLETE"
                 : passed
                 ? hasDistinction(percentage)
@@ -53,7 +53,9 @@ export default async function ResultsPage({
             <h1>
               {isPractice
                 ? passed
-                  ? "You passed."
+                  ? session.credentialId
+                    ? "Credential earned."
+                    : "You passed."
                   : "Keep building."
                 : passed
                   ? "Credential earned."
@@ -88,15 +90,29 @@ export default async function ResultsPage({
         )}
 
         <section className="page-panel form-block">
-          {isPractice ? (
-            <div className="notice-box">
-              Beta result recorded. This public knowledge test uses the legacy
-              practice bank and does not issue a certification credential.
-            </div>
-          ) : session.credentialId ? (
-            <Link className="button signal" href={`/credentials/${session.credentialId}`}>
+          {session.credentialId ? (
+            <Link
+              className="button signal"
+              href={`/credentials/${session.credentialId}`}
+            >
               View verified credential →
             </Link>
+          ) : isPractice && passed ? (
+            <>
+              <Link className="button signal" href={`/claim/${sessionId}`}>
+                Claim certification credential →
+              </Link>
+              <div className="notice-box" style={{ marginTop: 18 }}>
+                Sign in to bind this passing result to your identity. Your
+                credential will include a signed verification page and the
+                details needed to add it to LinkedIn.
+              </div>
+            </>
+          ) : isPractice ? (
+            <div className="notice-box">
+              Result recorded. Score {PASS_PERCENTAGE}% or higher to claim the
+              Voice AI Space credential.
+            </div>
           ) : session.percentage && session.percentage >= PASS_PERCENTAGE ? (
             <div className="notice-box">
               You met the standard. Formal issuance is temporarily held while the

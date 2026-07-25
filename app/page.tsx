@@ -83,7 +83,7 @@ export default async function HomePage() {
                 ["MODE", "Public beta"],
                 ["ASSESSMENT", `${EXAM_QUESTION_COUNT} server-scored questions`],
                 ["RESULT", "Immediate score"],
-                ["CREDENTIAL", "Not issued in beta"],
+                ["CREDENTIAL", "Claim after passing"],
               ]
             : [
                 ["FORMAT", "Open Badges 3.0 + 2.0"],

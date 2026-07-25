@@ -176,9 +176,12 @@ export async function startExam(input: {
   };
 }
 
-export async function loadSession(sessionId: string, identityKey: string) {
+export async function loadSession(
+  sessionId: string,
+  identityKeys: string | string[],
+) {
   const session = await getSession(sessionId);
-  assertOwner(session, identityKey);
+  assertOwner(session, identityKeys);
   const ids = parseQuestionIds(session.question_ids);
   const questionRows = await loadQuestions(ids);
   const questionMap = new Map(
@@ -229,14 +232,30 @@ export async function loadSession(sessionId: string, identityKey: string) {
   };
 }
 
+export async function latestCompletedSession(identityKeys: string[]) {
+  if (!identityKeys.length) return null;
+  const candidateIds = identityKeys.map((identityKey) => candidateId(identityKey));
+  const placeholders = candidateIds.map(() => "?").join(", ");
+  return getRawDb()
+    .prepare(
+      `SELECT id
+       FROM exam_sessions
+       WHERE candidate_id IN (${placeholders}) AND status = 'completed'
+       ORDER BY completed_at DESC
+       LIMIT 1`,
+    )
+    .bind(...candidateIds)
+    .first<{ id: string }>();
+}
+
 export async function recordAnswer(input: {
   sessionId: string;
-  identityKey: string;
+  identityKeys: string[];
   questionId: number;
   selectedOption: number;
 }) {
   const session = await getSession(input.sessionId);
-  assertOwner(session, input.identityKey);
+  assertOwner(session, input.identityKeys);
   assertActive(session);
   const questionIds = parseQuestionIds(session.question_ids);
   if (!questionIds.includes(input.questionId)) {
@@ -268,11 +287,11 @@ export async function recordAnswer(input: {
 
 export async function submitExam(
   sessionId: string,
-  identityKey: string,
+  identityKeys: string[],
   credentialEmail: string | null,
 ) {
   const session = await getSession(sessionId);
-  assertOwner(session, identityKey);
+  assertOwner(session, identityKeys);
   if (session.status === "completed") {
     return sessionResult(session);
   }
@@ -335,7 +354,6 @@ export async function submitExam(
   const canIssueCredential =
     passed &&
     issuanceEnabled() &&
-    !practiceMode() &&
     Boolean(credentialEmail);
   if (canIssueCredential && credentialEmail) {
     credential = await createCredential({
@@ -428,6 +446,114 @@ export async function submitExam(
   };
 }
 
+export async function claimCredential(
+  sessionId: string,
+  identityKeys: string[],
+  credentialEmail: string,
+) {
+  if (!issuanceEnabled()) {
+    throw new ExamError(
+      "Credential issuance is temporarily unavailable.",
+      503,
+      "issuance_unavailable",
+    );
+  }
+
+  const session = await getSession(sessionId);
+  assertOwner(session, identityKeys);
+  if (session.status !== "completed" || session.percentage === null) {
+    throw new ExamError(
+      "Complete the assessment before claiming a credential.",
+      409,
+      "assessment_incomplete",
+    );
+  }
+  if (session.percentage < PASS_PERCENTAGE) {
+    throw new ExamError(
+      `A score of ${PASS_PERCENTAGE}% is required to claim this credential.`,
+      403,
+      "standard_not_met",
+    );
+  }
+  if (session.credential_id) {
+    return { credentialId: session.credential_id };
+  }
+
+  const issuedAt = new Date();
+  const credential = await createCredential({
+    session,
+    email: credentialEmail,
+    score: session.score ?? scaledScore(session.percentage),
+    percentage: session.percentage,
+    issuedAt,
+  });
+  const db = getRawDb();
+  await db.batch([
+    db
+      .prepare(
+        `INSERT OR IGNORE INTO credentials
+          (id, session_id, recipient_name, recipient_id,
+           recipient_ob2_identity, recipient_ob2_salt, level, title,
+           exam_version, score, percentage, issued_at, expires_at,
+           status, ob3_jwt)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'valid', ?)`,
+      )
+      .bind(
+        credential.id,
+        session.id,
+        credential.recipientName,
+        credential.recipientId,
+        credential.recipientOb2Identity,
+        credential.recipientOb2Salt,
+        credential.level,
+        credential.title,
+        credential.examVersion,
+        credential.score,
+        credential.percentage,
+        credential.issuedAt,
+        credential.expiresAt,
+        credential.ob3Jwt,
+      ),
+    db
+      .prepare(
+        `UPDATE exam_sessions
+         SET credential_id = ?
+         WHERE id = ? AND credential_id IS NULL
+           AND EXISTS (
+             SELECT 1 FROM credentials
+             WHERE credentials.id = ? AND credentials.session_id = exam_sessions.id
+           )`,
+      )
+      .bind(credential.id, session.id, credential.id),
+    db
+      .prepare(
+        `INSERT INTO audit_events
+          (id, event_type, subject_id, actor_id, metadata, created_at)
+         VALUES (?, 'credential.claimed', ?, ?, ?, ?)`,
+      )
+      .bind(
+        newId(),
+        session.id,
+        candidateId(`email:${credentialEmail.trim().toLowerCase()}`),
+        JSON.stringify({ requestedCredentialId: credential.id }),
+        issuedAt.toISOString(),
+      ),
+  ]);
+
+  const claimed = await db
+    .prepare("SELECT credential_id FROM exam_sessions WHERE id = ?")
+    .bind(session.id)
+    .first<{ credential_id: string | null }>();
+  if (!claimed?.credential_id) {
+    throw new ExamError(
+      "The credential could not be claimed.",
+      500,
+      "credential_claim_failed",
+    );
+  }
+  return { credentialId: claimed.credential_id };
+}
+
 async function createCredential(input: {
   session: SessionRow;
   email: string;
@@ -475,8 +601,12 @@ async function getSession(id: string) {
   return session;
 }
 
-function assertOwner(session: SessionRow, identityKey: string) {
-  if (session.candidate_id !== candidateId(identityKey)) {
+function assertOwner(
+  session: SessionRow,
+  identityKeys: string | string[],
+) {
+  const keys = Array.isArray(identityKeys) ? identityKeys : [identityKeys];
+  if (!keys.some((identityKey) => session.candidate_id === candidateId(identityKey))) {
     throw new ExamError("Exam session not found.", 404, "not_found");
   }
 }
@@ -641,7 +771,6 @@ function sessionResult(session: SessionRow) {
       ? (JSON.parse(session.domain_results) as DomainResult[])
       : [],
     credentialId: session.credential_id,
-    issuancePending:
-      percentage >= PASS_PERCENTAGE && !session.credential_id && !issuanceEnabled(),
+    issuancePending: percentage >= PASS_PERCENTAGE && !session.credential_id,
   };
 }

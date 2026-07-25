@@ -15,7 +15,7 @@ export async function GET(
       );
     }
     const { sessionId } = await context.params;
-    return json(await loadSession(sessionId, identity.identityKey));
+    return json(await loadSession(sessionId, identity.identityKeys));
   } catch (error) {
     return apiError(error);
   }

@@ -99,7 +99,7 @@ export function StartAssessmentForm({
         />
         <span>
           {practiceMode
-            ? "I confirm this is my own attempt. I understand this beta uses the public legacy practice bank, records my result, and does not issue a certification credential."
+            ? "I confirm this is my own attempt and consent to publication of my name, score, credential status, and issuance dates if I pass and claim the credential."
             : "I confirm that I am the named candidate, will complete this assessment without unauthorized assistance, and consent to publication of my name, score, credential status, and issuance dates if I pass."}
         </span>
       </label>

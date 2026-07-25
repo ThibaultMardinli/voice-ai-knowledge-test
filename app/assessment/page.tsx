@@ -56,7 +56,7 @@ export default async function AssessmentStartPage() {
           Your session contains {EXAM_QUESTION_COUNT} questions and closes after{" "}
           {EXAM_DURATION_MINUTES} minutes. You need {PASS_PERCENTAGE}% to pass.
           {isPractice
-            ? " You will receive an immediate beta result; this public test does not issue a certification credential."
+            ? " You will receive an immediate result. Pass, then sign in to claim your signed Voice AI Space credential."
             : " A passing result earns a credential."}
         </p>
       </section>
@@ -74,6 +74,12 @@ export default async function AssessmentStartPage() {
         {ATTEMPT_WINDOW_DAYS}-day period. Starting an attempt consumes one slot.
         Answers are saved to the server as you progress. Correct answers are not
         disclosed.
+        {isPractice ? (
+          <>
+            {" "}
+            <Link href="/results/latest">View your latest result →</Link>
+          </>
+        ) : null}
       </section>
     </div>
   );

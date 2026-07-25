@@ -15,7 +15,7 @@ export default async function ActiveAssessmentPage({
   const { sessionId } = await params;
   const identity = await requireAssessmentIdentity(`/assessment/${sessionId}`);
   try {
-    const session = await loadSession(sessionId, identity.identityKey);
+    const session = await loadSession(sessionId, identity.identityKeys);
     if (session.status === "completed") redirect(`/results/${sessionId}`);
     return <ExamRunner session={session} />;
   } catch (error) {

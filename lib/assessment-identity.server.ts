@@ -14,25 +14,37 @@ const PRACTICE_COOKIE_SECONDS = 60 * 60 * 24 * 30;
 
 export type AssessmentIdentity = {
   identityKey: string;
+  identityKeys: string[];
   candidate: CandidateIdentity | null;
   credentialEmail: string | null;
 };
 
 export async function getAssessmentIdentity(): Promise<AssessmentIdentity | null> {
   const candidate = await getCandidate();
+  const token = practiceMode()
+    ? (await cookies()).get(PRACTICE_COOKIE)?.value
+    : null;
+  const practiceIdentity =
+    token && /^[0-9a-f-]{36}$/i.test(token) ? `practice:${token}` : null;
+
   if (candidate) {
+    const emailIdentity = `email:${candidate.email.trim().toLowerCase()}`;
     return {
-      identityKey: `email:${candidate.email.trim().toLowerCase()}`,
+      identityKey: emailIdentity,
+      identityKeys: [
+        emailIdentity,
+        ...(practiceIdentity ? [practiceIdentity] : []),
+      ],
       candidate,
       credentialEmail: candidate.email,
     };
   }
   if (!practiceMode()) return null;
 
-  const token = (await cookies()).get(PRACTICE_COOKIE)?.value;
-  if (!token || !/^[0-9a-f-]{36}$/i.test(token)) return null;
+  if (!practiceIdentity) return null;
   return {
-    identityKey: `practice:${token}`,
+    identityKey: practiceIdentity,
+    identityKeys: [practiceIdentity],
     candidate: null,
     credentialEmail: null,
   };
@@ -51,6 +63,7 @@ export function createPracticeIdentity(): AssessmentIdentity & {
   const token = newId();
   return {
     identityKey: `practice:${token}`,
+    identityKeys: [`practice:${token}`],
     candidate: null,
     credentialEmail: null,
     cookieHeader: [
