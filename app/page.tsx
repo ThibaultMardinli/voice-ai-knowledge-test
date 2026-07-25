@@ -113,28 +113,40 @@ export default async function HomePage() {
           </p>
         </div>
         <div className="credential-grid">
-          {Object.entries(LEVELS).map(([id, level], index) => (
-            <article className="credential-card" key={level.slug}>
-              <div className="credential-index">
-                <span>0{index + 1}</span>
-                <span>{level.label.toUpperCase()}</span>
-              </div>
-              <img
-                src={`/badges/${level.slug}.png`}
-                alt={`${level.title} credential badge`}
-                width="132"
-                height="132"
-              />
-              <div className="credential-copy">
-                <h3>{level.title}</h3>
-                <p>{level.description}</p>
-              </div>
-              <div className="card-footer">
-                <span>{level.credentialType}</span>
-                <Link href={`/criteria/${level.slug}`}>Criteria →</Link>
-              </div>
-            </article>
-          ))}
+          {Object.entries(LEVELS).map(([id, level], index) => {
+            const levelName = level.title.replace(/^Voice AI\s+/, "");
+            const [credentialLead, ...credentialRest] =
+              level.credentialType.split(" ");
+
+            return (
+              <article className="credential-card" key={level.slug}>
+                <div className="credential-index">
+                  <span>0{index + 1}</span>
+                  <span>{level.label.toUpperCase()}</span>
+                </div>
+                <img
+                  src={`/badges/${level.slug}.png`}
+                  alt={`${level.title} credential badge`}
+                  width="132"
+                  height="132"
+                />
+                <div className="credential-copy">
+                  <h3>
+                    <span>Voice AI</span>
+                    <span>{levelName}</span>
+                  </h3>
+                  <p>{level.description}</p>
+                </div>
+                <div className="card-footer">
+                  <span className="card-footer-label">
+                    <span>{credentialLead}</span>
+                    <span>{credentialRest.join(" ")}</span>
+                  </span>
+                  <Link href={`/criteria/${level.slug}`}>Criteria →</Link>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
 

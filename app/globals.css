@@ -803,6 +803,15 @@ select:focus-visible {
   line-height: 1.12;
 }
 
+.credential-card h3 span,
+.card-footer-label > span {
+  display: block;
+}
+
+.credential-card h3 span:first-child {
+  white-space: nowrap;
+}
+
 .credential-card p {
   color: var(--muted);
   font-size: 13px;
