@@ -151,6 +151,8 @@ test("applies security headers to every hosted response", async () => {
   assert.match(worker, /x-frame-options/);
   assert.match(worker, /permissions-policy/);
   assert.match(worker, /x-content-type-options/);
+  assert.match(worker, /credentials\.voiceaispace\.com/);
+  assert.match(worker, /Response\.redirect\(url, 308\)/);
 });
 
 test("serves credential proofs from the current canonical issuer domain", async () => {

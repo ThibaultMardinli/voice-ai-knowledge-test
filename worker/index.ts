@@ -28,6 +28,13 @@ interface ExecutionContext {
 const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
     const url = new URL(request.url);
+    if (
+      url.hostname === "voice-ai-certification.t-bot85.chatgpt.site" &&
+      isPublicCredentialPath(url.pathname)
+    ) {
+      url.hostname = "credentials.voiceaispace.com";
+      return withSecurityHeaders(Response.redirect(url, 308));
+    }
     if (url.pathname === "/_vinext/image") {
       const allowedWidths = [...DEFAULT_DEVICE_SIZES, ...DEFAULT_IMAGE_SIZES];
       const response = await handleImageOptimization(
@@ -49,6 +56,15 @@ const worker = {
     return withSecurityHeaders(await handler.fetch(request, env, ctx));
   },
 };
+
+function isPublicCredentialPath(pathname: string) {
+  return [
+    "/credentials/",
+    "/criteria/",
+    "/api/open-badges/",
+    "/badges/",
+  ].some((prefix) => pathname.startsWith(prefix));
+}
 
 function withSecurityHeaders(response: Response) {
   const headers = new Headers(response.headers);
