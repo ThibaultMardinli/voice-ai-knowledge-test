@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getCandidate } from "./chatgpt-auth";
-import { deploymentStage, isAdmin } from "@/lib/runtime";
+import { deploymentStage, isAdmin, publicBaseUrl } from "@/lib/runtime";
 import "./globals.css";
 
 export function generateMetadata(): Metadata {
   const isProduction = deploymentStage() === "production";
 
   return {
-    metadataBase: new URL(
-      isProduction
-        ? "https://credentials.voiceaispace.com"
-        : "https://voice-ai-certification.t-bot85.chatgpt.site",
-    ),
+    metadataBase: new URL(publicBaseUrl()),
     title: {
       default: "Voice AI Space Certification",
       template: "%s · Voice AI Space Certification",
