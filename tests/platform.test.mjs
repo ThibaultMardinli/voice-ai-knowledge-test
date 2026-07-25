@@ -154,7 +154,7 @@ test("applies security headers to every hosted response", async () => {
 });
 
 test("serves credential proofs from the current canonical issuer domain", async () => {
-  const [credentials, proofRoute] = await Promise.all([
+  const [credentials, proofRoute, jwksRoute, openBadges] = await Promise.all([
     readFile(new URL("../lib/credentials.server.ts", import.meta.url), "utf8"),
     readFile(
       new URL(
@@ -163,8 +163,15 @@ test("serves credential proofs from the current canonical issuer domain", async 
       ),
       "utf8",
     ),
+    readFile(
+      new URL("../app/api/open-badges/v3/jwks/route.ts", import.meta.url),
+      "utf8",
+    ),
+    readFile(new URL("../lib/open-badges.server.ts", import.meta.url), "utf8"),
   ]);
   assert.match(credentials, /currentCredentialProof/);
   assert.match(credentials, /credentialV3\(record\)/);
   assert.match(proofRoute, /await currentCredentialProof\(credential\)/);
+  assert.match(jwksRoute, /application\/jwk-set\+json/);
+  assert.match(openBadges, /api\/open-badges\/v3\/jwks/);
 });

@@ -43,7 +43,7 @@ export async function signCredential(
     .setProtectedHeader({
       alg: "RS256",
       typ: "JWT",
-      kid: `${publicBaseUrl()}/.well-known/jwks.json#${keyId()}`,
+      kid: `${publicBaseUrl()}/api/open-badges/v3/jwks#${keyId()}`,
     })
     .setIssuer(String(payload.issuer && (payload.issuer as { id: string }).id))
     .setSubject(subject)

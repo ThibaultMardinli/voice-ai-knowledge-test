@@ -168,7 +168,7 @@ export function issuerProfileV3() {
     email: "tbot@voiceaispace.com",
     description:
       "Independent Voice AI knowledge platform, professional community, and credential issuer.",
-    publicKey: `${base}/.well-known/jwks.json#${keyId()}`,
+    publicKey: `${base}/api/open-badges/v3/jwks#${keyId()}`,
   };
 }
 
@@ -181,7 +181,7 @@ export function publicJwks() {
     keys: [
       {
         ...jwk,
-        kid: `${publicBaseUrl()}/.well-known/jwks.json#${keyId()}`,
+        kid: `${publicBaseUrl()}/api/open-badges/v3/jwks#${keyId()}`,
         use: "sig",
         alg: "RS256",
       },
