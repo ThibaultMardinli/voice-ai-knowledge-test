@@ -1,3 +1,9 @@
 node_modules
 dist
 .DS_Store
+.wrangler
+tsconfig.tsbuildinfo
+public/og-source.png
+.env*
+!.env.example
+.dev.vars*
