@@ -4,3 +4,6 @@ dist
 .wrangler
 tsconfig.tsbuildinfo
 public/og-source.png
+.env*
+!.env.example
+.dev.vars*
