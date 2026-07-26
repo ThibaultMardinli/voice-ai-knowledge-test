@@ -81,9 +81,12 @@ revoked.
 | Attempt limit | 2 attempts per level in a rolling 30-day window |
 | Validity | 730 days |
 
-The assessment blueprint covers:
+Every credential-level assessment—including Voice AI Fundamentals, Voice AI
+Foundations, Voice AI Practitioner, and Voice AI Architect—contains 25
+questions. Those 25 questions are distributed across the five knowledge
+domains as follows:
 
-1. Voice AI Fundamentals — 5 questions
+1. Voice AI Fundamentals domain — 5 questions
 2. Real-Time Architecture & Pipelines — 6 questions
 3. LLM + Voice Orchestration — 6 questions
 4. Voice UX & Conversation Design — 4 questions
