@@ -2383,10 +2383,7 @@ select:focus-visible {
   line-height: 1;
   margin: 0 auto;
   max-width: 940px;
-}
-
-.learn-hero h1 span {
-  display: block;
+  white-space: nowrap;
 }
 
 .learn-hero h1 em {
@@ -2452,7 +2449,7 @@ select:focus-visible {
   }
 
   .learn-hero h1 {
-    font-size: clamp(46px, 14vw, 64px);
+    font-size: clamp(36px, 11vw, 64px);
   }
 
   .learn-intro p {

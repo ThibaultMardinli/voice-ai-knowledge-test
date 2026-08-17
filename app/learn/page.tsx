@@ -15,10 +15,7 @@ export default function LearnPage() {
       <section className="learn-hero">
         <div>
           <h1>
-            Voice AI
-            <span>
-              <em>Glossary</em>
-            </span>
+            Voice AI <em>Glossary</em>
           </h1>
         </div>
         <div className="learn-intro">
