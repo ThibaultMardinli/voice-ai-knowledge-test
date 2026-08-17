@@ -21,7 +21,8 @@ test("restores the public learning library without assessment answers", async ()
     readFile(new URL("../lib/glossary.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
   ]);
-  assert.match(page, /Learn the system, not just the vocabulary/);
+  assert.match(page, /Voice AI/);
+  assert.match(page, /<em>Glossary<\/em>/);
   assert.match(library, /Search the library/);
   assert.match(glossary, /Automatic Speech Recognition/);
   assert.doesNotMatch(glossary, /correct_option|correct:\s*\d|options:/);
