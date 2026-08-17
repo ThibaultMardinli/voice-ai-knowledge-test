@@ -174,15 +174,17 @@ export default async function HomePage() {
       </section>
 
       <section className="home-closing">
-        <div>
-          <span className="home-kicker">Ready when you are</span>
-          <h2>Turn what you know into proof you can share.</h2>
-        </div>
+        <span className="home-kicker">Ready when you are</span>
+        <h2>Turn what you know into proof you can share.</h2>
+        <p>
+          Take the knowledge test when you are ready, or verify an existing
+          Voice AI Space credential.
+        </p>
         <div className="home-closing-actions">
-          <Link className="home-button home-button-light" href={assessmentHref}>
+          <Link className="home-button home-button-primary" href={assessmentHref}>
             {assessmentLabel} →
           </Link>
-          <Link className="home-text-link home-text-link-light" href="/verify">
+          <Link className="home-button home-button-secondary" href="/verify">
             Verify a credential
           </Link>
         </div>

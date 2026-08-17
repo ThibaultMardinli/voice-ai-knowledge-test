@@ -2585,7 +2585,7 @@ select:focus-visible {
 .home-proof > div,
 .home-proof > div + div {
   background: rgba(255, 255, 255, 0.76);
-  border: 1px solid var(--home-line);
+  border: 1px solid #cbd5e1;
   padding: 22px 20px;
   text-align: center;
 }
@@ -2636,16 +2636,18 @@ select:focus-visible {
 }
 
 .home-credential-card {
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid var(--home-line);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #000;
+  box-shadow: 4px 4px 0 0 #000;
   min-height: 0;
   padding: 24px;
 }
 
 .home-credential-card:hover {
   background: white;
-  border-color: #94a3b8;
-  transform: translateY(-2px);
+  border-color: #000;
+  box-shadow: 2px 2px 0 0 #000;
+  transform: translate(2px, 2px);
 }
 
 .home-card-topline {
@@ -2720,15 +2722,18 @@ select:focus-visible {
 }
 
 .home-closing {
-  background: rgba(255, 255, 255, 0.76);
-  border: 0;
-  border-bottom: 1px solid var(--home-line);
-  border-top: 1px solid var(--home-ink);
+  align-items: center;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #000;
+  box-shadow: 4px 4px 0 0 #000;
   color: var(--home-ink);
+  display: flex;
+  flex-direction: column;
   margin-left: 0;
   margin-right: 0;
   margin-top: 112px;
-  padding: clamp(56px, 7vw, 80px) 0;
+  padding: clamp(56px, 7vw, 80px) clamp(24px, 7vw, 80px);
+  text-align: center;
 }
 
 .home-closing .home-kicker {
@@ -2736,14 +2741,26 @@ select:focus-visible {
   margin-bottom: 16px;
 }
 
-.home-closing .home-button-light {
-  background: var(--home-ink);
-  border-color: var(--home-ink);
-  color: white;
+.home-closing h2 {
+  max-width: 760px;
 }
 
-.home-closing .home-text-link-light {
-  color: var(--home-ink);
+.home-closing > p {
+  color: var(--home-muted);
+  font-size: 17px;
+  line-height: 26px;
+  margin: 22px auto 0;
+  max-width: 620px;
+}
+
+.home-closing-actions {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 32px;
 }
 
 @media (max-width: 900px) {
