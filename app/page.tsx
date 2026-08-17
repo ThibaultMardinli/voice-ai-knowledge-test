@@ -172,21 +172,38 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="home-closing">
-        <span className="home-kicker">Ready when you are</span>
-        <h2>Turn what you know into proof you can share.</h2>
-        <p>
-          Take the knowledge test when you are ready, or verify an existing
-          Voice AI Space credential.
-        </p>
-        <div className="home-closing-actions">
-          <Link className="home-button home-button-primary" href={assessmentHref}>
-            {assessmentLabel} →
+      <section className="home-resources" aria-labelledby="home-resources-title">
+        <div className="home-resources-intro">
+          <span className="home-kicker">Trust and transparency</span>
+          <h2 id="home-resources-title">Understand the standard. Check the proof.</h2>
+          <p>
+            The rules behind every assessment and the public record behind every
+            credential have their own dedicated space.
+          </p>
+        </div>
+        <div className="home-resource-grid">
+          <Link className="home-resource-card" href="/methodology">
+            <span className="home-resource-index">01</span>
+            <div>
+              <span className="home-resource-label">Methodology</span>
+              <h3>See how trust is built.</h3>
+              <p>Review scoring, governance, question controls, and release gates.</p>
+            </div>
+            <span className="home-resource-arrow" aria-hidden="true">→</span>
           </Link>
-          <Link className="home-button home-button-secondary" href="/verify">
-            Verify a credential
+          <Link className="home-resource-card" href="/verify">
+            <span className="home-resource-index">02</span>
+            <div>
+              <span className="home-resource-label">Verification</span>
+              <h3>Check a credential.</h3>
+              <p>Confirm issuance, expiry, revocation status, and cryptographic proof.</p>
+            </div>
+            <span className="home-resource-arrow" aria-hidden="true">→</span>
           </Link>
         </div>
+        <Link className="home-button home-button-primary home-resources-cta" href={assessmentHref}>
+          {assessmentLabel} →
+        </Link>
       </section>
     </div>
   );
