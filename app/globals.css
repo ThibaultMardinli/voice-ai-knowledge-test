@@ -3198,3 +3198,206 @@ select:focus-visible {
     border-top: 1px solid #000;
   }
 }
+
+/* Voice AI Space vocabulary controls */
+.learn-page .knowledge-controls {
+  background: transparent;
+  border: 0;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1120px;
+}
+
+.knowledge-control-row {
+  align-items: stretch;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(0, 1.5fr) minmax(230px, 0.65fr);
+}
+
+.learn-page .knowledge-search {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #cbd5e1;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  min-height: 64px;
+  padding: 5px;
+}
+
+.learn-page .knowledge-search-icon {
+  align-self: center;
+  border: 2px solid #94a3b8;
+  border-radius: 50%;
+  height: 16px;
+  justify-self: center;
+  padding: 0;
+  position: relative;
+  width: 16px;
+}
+
+.learn-page .knowledge-search-icon::after {
+  background: #94a3b8;
+  content: "";
+  height: 2px;
+  position: absolute;
+  right: -6px;
+  top: 13px;
+  transform: rotate(45deg);
+  width: 7px;
+}
+
+.learn-page .knowledge-search input {
+  background: transparent;
+  border: 0;
+  color: #020817;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: 17px;
+  min-height: 52px;
+  min-width: 0;
+  padding: 10px 16px;
+}
+
+.learn-page .knowledge-search input::placeholder {
+  color: #64748b;
+  opacity: 1;
+}
+
+.learn-page .knowledge-search button {
+  background: #020817;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  min-width: 112px;
+  padding: 0 22px;
+}
+
+.knowledge-status {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #cbd5e1;
+  color: #64748b;
+  display: flex;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: 17px;
+  gap: 8px;
+  justify-content: center;
+  min-height: 64px;
+  padding: 14px 22px;
+}
+
+.knowledge-status strong {
+  color: #020817;
+  font-size: 20px;
+}
+
+.knowledge-status-mark {
+  height: 18px;
+  margin-right: 4px;
+  position: relative;
+  width: 20px;
+}
+
+.knowledge-status-mark::before {
+  background: #020817;
+  bottom: 1px;
+  box-shadow: 6px -5px 0 #020817, 12px -10px 0 #020817;
+  content: "";
+  height: 6px;
+  left: 2px;
+  position: absolute;
+  width: 2px;
+}
+
+.learn-page .knowledge-filters {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #cbd5e1;
+  display: flex;
+  grid-template-columns: none;
+  margin: 48px auto 0;
+  max-width: 100%;
+  overflow-x: auto;
+  width: max-content;
+}
+
+.learn-page .knowledge-filters button {
+  background: transparent;
+  color: #020817;
+  flex: 0 0 auto;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+  min-height: 56px;
+  padding: 14px 20px;
+  text-transform: none;
+}
+
+.learn-page .knowledge-filters button + button,
+.learn-page .knowledge-filters button:nth-child(5),
+.learn-page .knowledge-filters button:nth-child(n + 5) {
+  border-left: 0;
+  border-top: 0;
+}
+
+.learn-page .knowledge-filters button:hover,
+.learn-page .knowledge-filters button.active {
+  background: #e5e7eb;
+  color: #020817;
+}
+
+.learn-page .knowledge-grid,
+.learn-page .knowledge-empty {
+  margin-top: 64px;
+}
+
+@media (max-width: 700px) {
+  .knowledge-control-row {
+    gap: 12px;
+    grid-template-columns: 1fr;
+  }
+
+  .learn-page .knowledge-search {
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+  }
+
+  .learn-page .knowledge-search input {
+    font-size: 15px;
+    padding-left: 10px;
+  }
+
+  .learn-page .knowledge-search button {
+    min-width: 88px;
+    padding: 0 16px;
+  }
+
+  .knowledge-status {
+    justify-content: flex-start;
+    min-height: 56px;
+  }
+
+  .learn-page .knowledge-filters {
+    display: flex;
+    grid-template-columns: none;
+    justify-content: flex-start;
+    margin-top: 32px;
+    width: 100%;
+  }
+
+  .learn-page .knowledge-filters button + button,
+  .learn-page .knowledge-filters button:nth-child(n + 2) {
+    border-left: 0;
+    border-top: 0;
+  }
+
+  .learn-page .knowledge-grid,
+  .learn-page .knowledge-empty {
+    margin-top: 48px;
+  }
+}

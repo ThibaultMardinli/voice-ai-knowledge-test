@@ -51,36 +51,46 @@ export function KnowledgeLibrary({
   return (
     <>
       <section className="knowledge-controls" aria-label="Knowledge filters">
-        <label className="knowledge-search">
-          <span>Search the library</span>
-          <input
-            type="search"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Try ASR, latency, RAG, compliance…"
-          />
-        </label>
-        <div className="knowledge-filters" aria-label="Filter by domain">
+        <div className="knowledge-control-row">
+          <form
+            className="knowledge-search"
+            role="search"
+            onSubmit={(event) => event.preventDefault()}
+          >
+            <label className="sr-only" htmlFor="vocabulary-search">
+              Search vocabulary
+            </label>
+            <span className="knowledge-search-icon" aria-hidden="true" />
+            <input
+              id="vocabulary-search"
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search vocabulary"
+            />
+            <button type="submit">Search</button>
+          </form>
+          <div className="knowledge-status" aria-live="polite">
+            <span className="knowledge-status-mark" aria-hidden="true" />
+            <strong>{filtered.length}</strong>
+            <span>{filtered.length === 1 ? "concept" : "concepts"}</span>
+          </div>
+        </div>
+        <div className="knowledge-filters" aria-label="Filter by domain" role="tablist">
           {FILTERS.map((item) => (
             <button
               className={filter === item.id ? "active" : ""}
               key={item.id}
               type="button"
               onClick={() => setFilter(item.id)}
-              aria-pressed={filter === item.id}
+              aria-selected={filter === item.id}
+              role="tab"
             >
               {item.label}
             </button>
           ))}
         </div>
       </section>
-
-      <div className="knowledge-count" aria-live="polite">
-        <span className="eyebrow">LIBRARY INDEX</span>
-        <strong>
-          {filtered.length} {filtered.length === 1 ? "concept" : "concepts"}
-        </strong>
-      </div>
 
       {filtered.length ? (
         <section className={gridClassName}>

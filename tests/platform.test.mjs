@@ -23,7 +23,7 @@ test("restores the public learning library without assessment answers", async ()
   ]);
   assert.match(page, /Voice AI/);
   assert.match(page, /<em>Glossary<\/em>/);
-  assert.match(library, /Search the library/);
+  assert.match(library, /Search vocabulary/);
   assert.match(glossary, /Automatic Speech Recognition/);
   assert.doesNotMatch(glossary, /correct_option|correct:\s*\d|options:/);
   assert.ok(home.indexOf('href="/learn"') < home.indexOf("href={assessmentHref}"));
