@@ -56,7 +56,7 @@ export default async function HomePage() {
         <div className="home-hero-copy">
           <span className="home-kicker">Voice AI Space Certification</span>
           <h1>
-            Know Voice AI.
+            Know Voice AI.{" "}
             <span>Prove it.</span>
           </h1>
           <p>
