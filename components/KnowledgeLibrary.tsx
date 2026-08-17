@@ -71,7 +71,6 @@ export function KnowledgeLibrary({
             <button type="submit">Search</button>
           </form>
           <div className="knowledge-status" aria-live="polite">
-            <span className="knowledge-status-mark" aria-hidden="true" />
             <strong>{entries.length}</strong>
             <span>concepts</span>
             {filtered.length !== entries.length ? (
