@@ -72,8 +72,11 @@ export function KnowledgeLibrary({
           </form>
           <div className="knowledge-status" aria-live="polite">
             <span className="knowledge-status-mark" aria-hidden="true" />
-            <strong>{filtered.length}</strong>
-            <span>{filtered.length === 1 ? "concept" : "concepts"}</span>
+            <strong>{entries.length}</strong>
+            <span>concepts</span>
+            {filtered.length !== entries.length ? (
+              <span className="knowledge-status-result">{filtered.length} shown</span>
+            ) : null}
           </div>
         </div>
         <div className="knowledge-filters" aria-label="Filter by domain" role="tablist">
@@ -82,7 +85,10 @@ export function KnowledgeLibrary({
               className={filter === item.id ? "active" : ""}
               key={item.id}
               type="button"
-              onClick={() => setFilter(item.id)}
+              onClick={() => {
+                setQuery("");
+                setFilter(item.id);
+              }}
               aria-selected={filter === item.id}
               role="tab"
             >
