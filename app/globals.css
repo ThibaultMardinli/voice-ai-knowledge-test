@@ -2521,7 +2521,7 @@ select:focus-visible {
   font-weight: 700;
   letter-spacing: -0.025em;
   line-height: 1;
-  margin: 24px auto 24px;
+  margin: 0 auto 24px;
   max-width: 950px;
 }
 

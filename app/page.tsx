@@ -54,7 +54,6 @@ export default async function HomePage() {
 
       <section className="home-hero">
         <div className="home-hero-copy">
-          <span className="home-kicker">Voice AI Space Certification</span>
           <h1>
             Voice AI
             <span>
