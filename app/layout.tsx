@@ -78,7 +78,6 @@ export default async function RootLayout({
             <nav aria-label="Primary navigation">
               <Link href="/learn">Learn</Link>
               <Link href="/#credentials">Credentials</Link>
-              <Link href="/#standard">Standard</Link>
               <Link href="/methodology">Methodology</Link>
               <Link href="/verify">Verify</Link>
               {showAdmin ? (
