@@ -73,6 +73,12 @@ select:focus-visible {
   width: min(1240px, calc(100% - 48px));
   margin: 0 auto;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-shell > main {
+  flex: 1 0 auto;
 }
 
 .site-header,
@@ -604,6 +610,65 @@ select:focus-visible {
   font-size: 12px;
   padding-left: 0;
   padding-right: 0;
+}
+
+.not-found-page {
+  align-items: center;
+  display: flex;
+  min-height: 100%;
+  padding: clamp(56px, 10vh, 112px) 0;
+}
+
+.not-found-message {
+  border-left: 2px solid var(--ink);
+  max-width: 650px;
+  padding: 2px 0 4px clamp(20px, 3vw, 34px);
+}
+
+.not-found-message h1 {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  margin: 12px 0 14px;
+}
+
+.not-found-message p {
+  color: var(--muted);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 580px;
+}
+
+.not-found-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 22px;
+  margin-top: 24px;
+}
+
+.not-found-link {
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.not-found-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.not-found-link--primary::after {
+  content: " →";
 }
 
 .site-footer > div:first-child {
