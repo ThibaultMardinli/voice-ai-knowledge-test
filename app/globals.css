@@ -2523,7 +2523,7 @@ select:focus-visible {
 
 .home-hero h1 em {
   font-style: italic;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .home-hero-copy > p {
@@ -2585,7 +2585,7 @@ select:focus-visible {
 .home-proof > div,
 .home-proof > div + div {
   background: rgba(255, 255, 255, 0.76);
-  border: 1px solid #cbd5e1;
+  border: 1px solid #000;
   padding: 22px 20px;
   text-align: center;
 }
@@ -2729,10 +2729,11 @@ select:focus-visible {
   color: var(--home-ink);
   display: flex;
   flex-direction: column;
+  gap: 0;
   margin-left: 0;
   margin-right: 0;
   margin-top: 112px;
-  padding: clamp(56px, 7vw, 80px) clamp(24px, 7vw, 80px);
+  padding: clamp(40px, 5vw, 56px) clamp(24px, 7vw, 80px);
   text-align: center;
 }
 
