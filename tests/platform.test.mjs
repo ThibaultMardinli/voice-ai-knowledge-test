@@ -5,8 +5,19 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 
 test("defines the public credential standard", async () => {
-  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  assert.match(page, /Open Badges 3\.0 \+ 2\.0/i);
+  const [page, openBadgesV2, openBadgesV3] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(
+      new URL("../app/api/open-badges/v2/issuer/route.ts", import.meta.url),
+      "utf8",
+    ),
+    readFile(
+      new URL("../app/api/open-badges/v3/issuer/route.ts", import.meta.url),
+      "utf8",
+    ),
+  ]);
+  assert.match(openBadgesV2, /issuerProfileV2/);
+  assert.match(openBadgesV3, /issuerProfileV3/);
   assert.match(page, /Evidence, not decoration/i);
   assert.match(page, /No vanity badges/i);
 });

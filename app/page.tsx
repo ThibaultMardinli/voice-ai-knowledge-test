@@ -156,7 +156,6 @@ export default async function HomePage() {
             No vanity badges: questions are server-scored across the full Voice
             AI stack. Every issued credential is identity-bound, signed, public,
             and revocable.
-            The record supports Open Badges 3.0 + 2.0.
           </p>
           <Link className="home-text-link" href="/methodology">
             Read the methodology →
