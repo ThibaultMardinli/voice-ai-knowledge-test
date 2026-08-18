@@ -3472,6 +3472,7 @@ select:focus-visible {
 .learn-page .knowledge-card:nth-child(n + 4) {
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid #020817;
+  box-shadow: 3px 3px 0 0 rgba(2, 8, 23, 0.9);
   display: flex;
   flex-direction: column;
   min-height: 270px;
