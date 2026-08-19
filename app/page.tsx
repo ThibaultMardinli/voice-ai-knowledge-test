@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { VerifyForm } from "@/components/VerifyForm";
 import { getCandidate, chatGPTSignInPath } from "./chatgpt-auth";
 import {
   CREDENTIAL_VALIDITY_DAYS,
@@ -170,38 +171,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="home-resources" aria-labelledby="home-resources-title">
-        <div className="home-resources-intro">
-          <span className="home-kicker">Trust and transparency</span>
-          <h2 id="home-resources-title">Understand the standard. Check the proof.</h2>
-          <p>
-            The rules behind every assessment and the public record behind every
-            credential have their own dedicated space.
-          </p>
+      <section className="home-verification" aria-labelledby="home-verification-title">
+        <div className="home-verification-copy">
+          <span className="home-kicker">Credential verification</span>
+          <h2 id="home-verification-title">Check a credential.</h2>
+          <p>Enter a credential ID or paste its verification URL.</p>
         </div>
-        <div className="home-resource-grid">
-          <Link className="home-resource-card" href="/methodology">
-            <span className="home-resource-index">01</span>
-            <div>
-              <span className="home-resource-label">Methodology</span>
-              <h3>See how trust is built.</h3>
-              <p>Review scoring, governance, question controls, and release gates.</p>
-            </div>
-            <span className="home-resource-arrow" aria-hidden="true">→</span>
-          </Link>
-          <Link className="home-resource-card" href="/verify">
-            <span className="home-resource-index">02</span>
-            <div>
-              <span className="home-resource-label">Verification</span>
-              <h3>Check a credential.</h3>
-              <p>Confirm issuance, expiry, revocation status, and cryptographic proof.</p>
-            </div>
-            <span className="home-resource-arrow" aria-hidden="true">→</span>
-          </Link>
-        </div>
-        <Link className="home-button home-button-primary home-resources-cta" href={assessmentHref}>
-          {assessmentLabel} →
-        </Link>
+        <VerifyForm />
       </section>
     </div>
   );
