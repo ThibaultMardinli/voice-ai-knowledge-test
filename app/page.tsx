@@ -3,7 +3,6 @@ import { getCandidate, chatGPTSignInPath } from "./chatgpt-auth";
 import {
   CREDENTIAL_VALIDITY_DAYS,
   DOMAINS,
-  EXAM_QUESTION_COUNT,
   EXAM_VERSION,
   LEVELS,
   PASS_PERCENTAGE,
@@ -88,10 +87,7 @@ export default async function HomePage() {
       <section className="home-proof" aria-label="Assessment summary">
         <div>
           <strong>{QUESTION_BANK_COUNT}</strong>
-          <span>
-            questions in bank
-            <small>{EXAM_QUESTION_COUNT} selected per attempt</small>
-          </span>
+          <span>questions in bank</span>
         </div>
         <div>
           <strong>{Object.keys(LEVELS).length}</strong>
