@@ -2699,6 +2699,14 @@ select:focus-visible {
   font-weight: 700;
 }
 
+.home-proof small {
+  color: var(--home-muted);
+  display: block;
+  font-size: 11px;
+  line-height: 1.35;
+  margin-top: 6px;
+}
+
 .home-section {
   padding: 80px 0 112px;
 }

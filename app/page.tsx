@@ -7,6 +7,7 @@ import {
   EXAM_VERSION,
   LEVELS,
   PASS_PERCENTAGE,
+  QUESTION_BANK_COUNT,
 } from "@/lib/policy";
 import { questionBankStatus } from "@/lib/question-bank.server";
 import { assessmentEnabled, isAdmin, practiceMode } from "@/lib/runtime";
@@ -86,8 +87,11 @@ export default async function HomePage() {
 
       <section className="home-proof" aria-label="Assessment summary">
         <div>
-          <strong>{EXAM_QUESTION_COUNT}</strong>
-          <span>total questions</span>
+          <strong>{QUESTION_BANK_COUNT}</strong>
+          <span>
+            questions in bank
+            <small>{EXAM_QUESTION_COUNT} selected per attempt</small>
+          </span>
         </div>
         <div>
           <strong>{Object.keys(LEVELS).length}</strong>
