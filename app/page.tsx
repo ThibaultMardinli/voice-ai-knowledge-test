@@ -3,7 +3,6 @@ import { getCandidate, chatGPTSignInPath } from "./chatgpt-auth";
 import {
   CREDENTIAL_VALIDITY_DAYS,
   DOMAINS,
-  EXAM_DURATION_MINUTES,
   EXAM_QUESTION_COUNT,
   EXAM_VERSION,
   LEVELS,
@@ -88,15 +87,15 @@ export default async function HomePage() {
       <section className="home-proof" aria-label="Assessment summary">
         <div>
           <strong>{EXAM_QUESTION_COUNT}</strong>
-          <span>questions</span>
+          <span>total questions</span>
         </div>
         <div>
-          <strong>{EXAM_DURATION_MINUTES}</strong>
-          <span>minutes</span>
+          <strong>{Object.keys(LEVELS).length}</strong>
+          <span>credential levels</span>
         </div>
         <div>
           <strong>{PASS_PERCENTAGE}%</strong>
-          <span>pass score</span>
+          <span>required to pass</span>
         </div>
         <div>
           <strong>{Math.round(CREDENTIAL_VALIDITY_DAYS / 365)} years</strong>
