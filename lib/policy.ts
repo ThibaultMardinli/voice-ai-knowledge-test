@@ -1,6 +1,7 @@
 export const EXAM_VERSION = "VAS-2026.1";
 export const EXAM_DURATION_MINUTES = 35;
 export const EXAM_QUESTION_COUNT = 25;
+export const QUESTION_BANK_COUNT = 130;
 export const PASS_PERCENTAGE = 80;
 export const DISTINCTION_PERCENTAGE = 90;
 export const CREDENTIAL_VALIDITY_DAYS = 730;

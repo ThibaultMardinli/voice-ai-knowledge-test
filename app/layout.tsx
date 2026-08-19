@@ -76,11 +76,8 @@ export default async function RootLayout({
               <strong>CERTIFICATION</strong>
             </Link>
             <nav aria-label="Primary navigation">
-              <Link href="/learn">Learn</Link>
+              <Link href="/learn">Glossary</Link>
               <Link href="/#credentials">Credentials</Link>
-              <Link href="/#standard">Standard</Link>
-              <Link href="/methodology">Methodology</Link>
-              <Link href="/verify">Verify</Link>
               {showAdmin ? (
                 <Link href="/admin/questions">Question Bank</Link>
               ) : null}
@@ -107,6 +104,8 @@ export default async function RootLayout({
                 LinkedIn
               </a>
               <a href="mailto:tbot@voiceaispace.com">Contact</a>
+              <Link href="/methodology">Methodology</Link>
+              <Link href="/verify">Verify</Link>
               <Link href="/privacy">Privacy</Link>
             </div>
           </footer>

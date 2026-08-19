@@ -14,8 +14,9 @@ export default function LearnPage() {
     <div className="page-wrap learn-page">
       <section className="learn-hero">
         <div>
-          <span className="eyebrow">VOICE AI KNOWLEDGE LIBRARY</span>
-          <h1>Learn the system, not just the vocabulary.</h1>
+          <h1>
+            Voice AI <em>Glossary</em>
+          </h1>
         </div>
         <div className="learn-intro">
           <p>

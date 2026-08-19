@@ -5,8 +5,19 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 
 test("defines the public credential standard", async () => {
-  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  assert.match(page, /Open Badges 3\.0 \+ 2\.0/i);
+  const [page, openBadgesV2, openBadgesV3] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(
+      new URL("../app/api/open-badges/v2/issuer/route.ts", import.meta.url),
+      "utf8",
+    ),
+    readFile(
+      new URL("../app/api/open-badges/v3/issuer/route.ts", import.meta.url),
+      "utf8",
+    ),
+  ]);
+  assert.match(openBadgesV2, /issuerProfileV2/);
+  assert.match(openBadgesV3, /issuerProfileV3/);
   assert.match(page, /Evidence, not decoration/i);
   assert.match(page, /No vanity badges/i);
 });
@@ -21,8 +32,9 @@ test("restores the public learning library without assessment answers", async ()
     readFile(new URL("../lib/glossary.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
   ]);
-  assert.match(page, /Learn the system, not just the vocabulary/);
-  assert.match(library, /Search the library/);
+  assert.match(page, /Voice AI/);
+  assert.match(page, /<em>Glossary<\/em>/);
+  assert.match(library, /Search vocabulary/);
   assert.match(glossary, /Automatic Speech Recognition/);
   assert.doesNotMatch(glossary, /correct_option|correct:\s*\d|options:/);
   assert.ok(home.indexOf('href="/learn"') < home.indexOf("href={assessmentHref}"));
